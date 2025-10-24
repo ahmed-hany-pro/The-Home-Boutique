@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Home Boutique - Hotel Services</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="hotel-logo">
+                <div class="logo-circle">
+                    <div class="logo-monogram">HB</div>
+                    <div class="logo-crown">♔</div>
+                </div>
+            </div>
+            <div class="hotel-info">
+                <h1 class="hotel-name">The Home Boutique</h1>
+                <p class="hotel-subtitle">PYRAMIDS INN</p>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tab-navigation">
+            <button class="tab-btn active" data-tab="food">
+                <i class="fas fa-utensils"></i>
+                <span>Order Food</span>
+            </button>
+            <button class="tab-btn" data-tab="tour">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Tour</span>
+            </button>
+            <button class="tab-btn" data-tab="transport">
+                <i class="fas fa-car"></i>
+                <span>Transport</span>
+            </button>
+            <button class="tab-btn" data-tab="housekeeping">
+                <i class="fas fa-home"></i>
+                <span>Housekeeping</span>
+            </button>
+        </nav>
+
+        <!-- Tab Content -->
+        <main class="tab-content">
+            <!-- Order Food Tab -->
+            <div id="food" class="tab-panel active">
+                <div class="panel-header">
+                    <h2><i class="fas fa-utensils"></i> Order Food</h2>
+                </div>
+                
+                <div class="menu-section">
+                    <h3>Menu</h3>
+                    <div class="menu-categories">
+                        <button class="category-btn active" data-category="main">Main Dishes</button>
+                        <button class="category-btn" data-category="appetizers">Appetizers</button>
+                        <button class="category-btn" data-category="drinks">Drinks</button>
+                        <button class="category-btn" data-category="desserts">Desserts</button>
+                    </div>
+                    
+                    <div class="menu-items">
+                        <!-- Main Dishes -->
+                        <div class="menu-category active" data-category="main">
+                            <div class="menu-item">
+                                <div class="item-info">
+                                    <h4>Grilled Chicken</h4>
+                                    <p>Fresh grilled chicken with herbs</p>
+                                </div>
+                                <div class="item-price">$12.99</div>
+                                <button class="add-btn" data-name="Grilled Chicken" data-price="12.99">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="menu-item">
+                                <div class="item-info">
+                                    <h4>Beef Steak</h4>
+                                    <p>Premium beef steak cooked to perfection</p>
+                                </div>
+                                <div class="item-price">$18.99</div>
+                                <button class="add-btn" data-name="Beef Steak" data-price="18.99">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="menu-item">
+                                <div class="item-info">
+                                    <h4>Fish Fillet</h4>
+                                    <p>Fresh fish fillet with lemon sauce</p>
+                                </div>
+                                <div class="item-price">$15.99</div>
+                                <button class="add-btn" data-name="Fish Fillet" data-price="15.99">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Appetizers -->
+                        <div class="menu-category" data-category="appetizers">
+                            <div class="menu-item">
+                                <div class="item-info">
+                                    <h4>Caesar Salad</h4>
+                                    <p>Fresh lettuce with caesar dressing</p>
+                                </div>
+                                <div class="item-price">$8.99</div>
+                                <button class="add-btn" data-name="Caesar Salad" data-price="8.99">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="menu-item">
+                                <div class="item-info">
+                                    <h4>Chicken Wings</h4>
+                                    <p>Spicy chicken wings with sauce</p>
+                                </div>
+                                <div class="item-price">$10.99</div>
+                                <button class="add-btn" data-name="Chicken Wings" data-price="10.99">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Drinks -->
+                        <div class="menu-category" data-category="drinks">
+                            <div class="menu-item">
+                                <div class="item-info">
+                                    <h4>Fresh Juice</h4>
+                                    <p>Orange, Apple, or Mango</p>
+                                </div>
+                                <div class="item-price">$4.99</div>
+                                <button class="add-btn" data-name="Fresh Juice" data-price="4.99">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="menu-item">
+                                <div class="item-info">
+                                    <h4>Coffee</h4>
+                                    <p>Espresso, Cappuccino, or Latte</p>
+                                </div>
+                                <div class="item-price">$3.99</div>
+                                <button class="add-btn" data-name="Coffee" data-price="3.99">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Desserts -->
+                        <div class="menu-category" data-category="desserts">
+                            <div class="menu-item">
+                                <div class="item-info">
+                                    <h4>Chocolate Cake</h4>
+                                    <p>Rich chocolate cake with cream</p>
+                                </div>
+                                <div class="item-price">$6.99</div>
+                                <button class="add-btn" data-name="Chocolate Cake" data-price="6.99">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="menu-item">
+                                <div class="item-info">
+                                    <h4>Ice Cream</h4>
+                                    <p>Vanilla, Chocolate, or Strawberry</p>
+                                </div>
+                                <div class="item-price">$4.99</div>
+                                <button class="add-btn" data-name="Ice Cream" data-price="4.99">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cart-section">
+                    <h3>Your Order</h3>
+                    
+                    <div class="form-group">
+                        <label for="customerName">Your Name *</label>
+                        <input type="text" id="customerName" required placeholder="Enter your name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="roomNumber">Room Number *</label>
+                        <input type="text" id="roomNumber" required placeholder="Enter your room number">
+                    </div>
+                    
+                    <div class="cart-items" id="cartItems">
+                        <p class="empty-cart">Your cart is empty</p>
+                    </div>
+                    <div class="cart-total">
+                        <strong>Total: $<span id="totalPrice">0.00</span></strong>
+                    </div>
+                    <button class="order-btn" id="placeOrderBtn" disabled>
+                        <i class="fas fa-envelope"></i> Send Order via Email
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tour Organization Tab -->
+            <div id="tour" class="tab-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-map-marked-alt"></i> Tour Organization</h2>
+                </div>
+                
+                <form class="service-form" id="tourForm">
+                    <div class="form-group">
+                        <label for="tourCustomerName">Your Name *</label>
+                        <input type="text" id="tourCustomerName" required placeholder="Enter your name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tourRoomNumber">Room Number *</label>
+                        <input type="text" id="tourRoomNumber" required placeholder="Enter your room number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tourDestination">Destination</label>
+                        <input type="text" id="tourDestination" required placeholder="Enter destination">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tourDate">Date</label>
+                        <input type="date" id="tourDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tourTime">Time</label>
+                        <input type="time" id="tourTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tourDuration">Duration</label>
+                        <select id="tourDuration" required>
+                            <option value="">Select duration</option>
+                            <option value="2 hours">2 hours</option>
+                            <option value="4 hours">4 hours</option>
+                            <option value="6 hours">6 hours</option>
+                            <option value="8 hours">8 hours</option>
+                            <option value="Full day">Full day</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tourParticipants">Number of Participants</label>
+                        <input type="number" id="tourParticipants" min="1" required placeholder="Number of people">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tourSpecialRequests">Special Requests</label>
+                        <textarea id="tourSpecialRequests" placeholder="Any special requirements or requests"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-envelope"></i> Send Tour Request
+                    </button>
+                </form>
+            </div>
+
+            <!-- Transportation Tab -->
+            <div id="transport" class="tab-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-car"></i> Transportation</h2>
+                </div>
+                
+                <form class="service-form" id="transportForm">
+                    <div class="form-group">
+                        <label for="transportCustomerName">Your Name *</label>
+                        <input type="text" id="transportCustomerName" required placeholder="Enter your name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transportRoomNumber">Room Number *</label>
+                        <input type="text" id="transportRoomNumber" required placeholder="Enter your room number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transportType">Transport Type</label>
+                        <select id="transportType" required>
+                            <option value="">Select transport type</option>
+                            <option value="Taxi">Taxi</option>
+                            <option value="Bus">Bus</option>
+                            <option value="Private Car">Private Car</option>
+                            <option value="Van">Van</option>
+                            <option value="Motorcycle">Motorcycle</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pickupLocation">Pickup Location</label>
+                        <input type="text" id="pickupLocation" required placeholder="Enter pickup address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="destination">Destination</label>
+                        <input type="text" id="destination" required placeholder="Enter destination">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transportDate">Date</label>
+                        <input type="date" id="transportDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transportTime">Time</label>
+                        <input type="time" id="transportTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="passengers">Number of Passengers</label>
+                        <input type="number" id="passengers" min="1" required placeholder="Number of passengers">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transportSpecialRequests">Special Requests</label>
+                        <textarea id="transportSpecialRequests" placeholder="Any special requirements"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-envelope"></i> Send Transport Request
+                    </button>
+                </form>
+            </div>
+
+            <!-- Housekeeping Tab -->
+            <div id="housekeeping" class="tab-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-home"></i> Housekeeping</h2>
+                </div>
+                
+                <form class="service-form" id="housekeepingForm">
+                    <div class="form-group">
+                        <label for="housekeepingCustomerName">Your Name *</label>
+                        <input type="text" id="housekeepingCustomerName" required placeholder="Enter your name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="housekeepingRoomNumber">Room Number *</label>
+                        <input type="text" id="housekeepingRoomNumber" required placeholder="Enter your room number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceType">Service Type</label>
+                        <select id="serviceType" required>
+                            <option value="">Select service type</option>
+                            <option value="Regular Cleaning">Regular Cleaning</option>
+                            <option value="Deep Cleaning">Deep Cleaning</option>
+                            <option value="Window Cleaning">Window Cleaning</option>
+                            <option value="Carpet Cleaning">Carpet Cleaning</option>
+                            <option value="Kitchen Cleaning">Kitchen Cleaning</option>
+                            <option value="Bathroom Cleaning">Bathroom Cleaning</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="propertyAddress">Property Address</label>
+                        <input type="text" id="propertyAddress" required placeholder="Enter property address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="propertySize">Property Size</label>
+                        <select id="propertySize" required>
+                            <option value="">Select property size</option>
+                            <option value="Studio">Studio</option>
+                            <option value="1 Bedroom">1 Bedroom</option>
+                            <option value="2 Bedrooms">2 Bedrooms</option>
+                            <option value="3 Bedrooms">3 Bedrooms</option>
+                            <option value="4+ Bedrooms">4+ Bedrooms</option>
+                            <option value="Office">Office</option>
+                            <option value="Commercial">Commercial</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cleaningDate">Preferred Date</label>
+                        <input type="date" id="cleaningDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cleaningTime">Preferred Time</label>
+                        <select id="cleaningTime" required>
+                            <option value="">Select time</option>
+                            <option value="Morning (8AM-12PM)">Morning (8AM-12PM)</option>
+                            <option value="Afternoon (12PM-4PM)">Afternoon (12PM-4PM)</option>
+                            <option value="Evening (4PM-8PM)">Evening (4PM-8PM)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cleaningFrequency">Frequency</label>
+                        <select id="cleaningFrequency" required>
+                            <option value="">Select frequency</option>
+                            <option value="One-time">One-time</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Bi-weekly">Bi-weekly</option>
+                            <option value="Monthly">Monthly</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="housekeepingSpecialRequests">Special Requests</label>
+                        <textarea id="housekeepingSpecialRequests" placeholder="Any special requirements or areas to focus on"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-envelope"></i> Send Housekeeping Request
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-check-circle"></i> Confirm Your Request</h3>
+                <button class="close-btn" onclick="closeConfirmationModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="confirmationContent">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeConfirmationModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="confirm-btn" id="confirmSendBtn">
+                    <i class="fas fa-envelope"></i> Send Email
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("UKlLcoE6rx7V_Ku-w"); // Replace with your EmailJS public key
+        })();
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

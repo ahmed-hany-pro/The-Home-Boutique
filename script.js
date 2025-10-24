@@ -1,0 +1,647 @@
+// Email Configuration
+const EMAIL_CONFIG = {
+    service: 'gmail', // Email service provider
+    user: 'ahhasa842@gmail.com', // Your email address
+    password: 'your-app-password', // Your app password (not regular password)
+    recipients: {
+        food: 'ahmedhany40w@gmail.com', // Food service email
+        tour: 'ahmedhany40w@gmail.com', // Tour service email
+        transport: 'ahmedhany40w@gmail.com', // Transport service email
+        housekeeping: 'ahmedhany40w@gmail.com' // Housekeeping service email
+    }
+};
+
+// Global Variables
+let cart = [];
+let currentTab = 'food';
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', function() {
+    initializeTabs();
+    initializeMenu();
+    initializeForms();
+    updateCartDisplay();
+});
+
+// Tab Navigation
+function initializeTabs() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetTab = button.getAttribute('data-tab');
+            switchTab(targetTab);
+        });
+    });
+}
+
+function switchTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+    // Update tab panels
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    document.getElementById(tabName).classList.add('active');
+
+    currentTab = tabName;
+}
+
+// Menu Functionality
+function initializeMenu() {
+    // Category buttons
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const category = button.getAttribute('data-category');
+            switchCategory(category);
+        });
+    });
+
+    // Add to cart buttons
+    const addButtons = document.querySelectorAll('.add-btn');
+    addButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const name = button.getAttribute('data-name');
+            const price = parseFloat(button.getAttribute('data-price'));
+            addToCart(name, price);
+        });
+    });
+}
+
+function switchCategory(category) {
+    // Update category buttons
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-category="${category}"]`).classList.add('active');
+
+    // Update category panels
+    document.querySelectorAll('.menu-category').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    document.querySelector(`[data-category="${category}"].menu-category`).classList.add('active');
+}
+
+function addToCart(name, price) {
+    const existingItem = cart.find(item => item.name === name);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            name: name,
+            price: price,
+            quantity: 1
+        });
+    }
+    
+    updateCartDisplay();
+    showSuccessMessage(`${name} added to cart!`);
+}
+
+function removeFromCart(name) {
+    cart = cart.filter(item => item.name !== name);
+    updateCartDisplay();
+}
+
+function updateQuantity(name, change) {
+    const item = cart.find(item => item.name === name);
+    if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+            removeFromCart(name);
+        } else {
+            updateCartDisplay();
+        }
+    }
+}
+
+function updateCartDisplay() {
+    const cartItems = document.getElementById('cartItems');
+    const totalPrice = document.getElementById('totalPrice');
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
+        totalPrice.textContent = '0.00';
+        placeOrderBtn.disabled = true;
+        return;
+    }
+
+    let cartHTML = '';
+    let total = 0;
+
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        cartHTML += `
+            <div class="cart-item">
+                <div class="cart-item-info">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">$${item.price.toFixed(2)} each</div>
+                </div>
+                <div class="cart-item-controls">
+                    <button class="quantity-btn" onclick="updateQuantity('${item.name}', -1)">-</button>
+                    <span class="quantity">${item.quantity}</span>
+                    <button class="quantity-btn" onclick="updateQuantity('${item.name}', 1)">+</button>
+                </div>
+            </div>
+        `;
+    });
+
+    cartItems.innerHTML = cartHTML;
+    totalPrice.textContent = total.toFixed(2);
+    placeOrderBtn.disabled = false;
+}
+
+// Form Handling
+function initializeForms() {
+    // Food order form
+    const placeOrderBtn = document.getElementById('placeOrderBtn');
+    placeOrderBtn.addEventListener('click', handleFoodOrder);
+
+    // Tour form
+    const tourForm = document.getElementById('tourForm');
+    tourForm.addEventListener('submit', handleTourForm);
+
+    // Transport form
+    const transportForm = document.getElementById('transportForm');
+    transportForm.addEventListener('submit', handleTransportForm);
+
+    // Housekeeping form
+    const housekeepingForm = document.getElementById('housekeepingForm');
+    housekeepingForm.addEventListener('submit', handleHousekeepingForm);
+}
+
+function handleFoodOrder(e) {
+    e.preventDefault();
+    
+    if (cart.length === 0) {
+        showErrorMessage('Your cart is empty!');
+        return;
+    }
+
+    const customerName = document.getElementById('customerName').value.trim();
+    const roomNumber = document.getElementById('roomNumber').value.trim();
+    
+    if (!customerName) {
+        showErrorMessage('Please enter your name!');
+        return;
+    }
+    
+    if (!roomNumber) {
+        showErrorMessage('Please enter your room number!');
+        return;
+    }
+
+    const orderDetails = generateFoodOrderMessage(customerName, roomNumber);
+    const confirmationContent = generateFoodConfirmationContent(customerName, roomNumber);
+    const emailData = {
+        message: orderDetails,
+        recipient: EMAIL_CONFIG.recipients.food,
+        subject: `Room ${roomNumber} - Food Order Request`,
+        roomNumber: roomNumber
+    };
+    
+    showConfirmationModal(confirmationContent, emailData);
+}
+
+function handleTourForm(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const customerName = formData.get('tourCustomerName');
+    const roomNumber = formData.get('tourRoomNumber');
+    
+    if (!customerName || !customerName.trim()) {
+        showErrorMessage('Please enter your name!');
+        return;
+    }
+    
+    if (!roomNumber || !roomNumber.trim()) {
+        showErrorMessage('Please enter your room number!');
+        return;
+    }
+    
+    const tourDetails = generateTourMessage(formData);
+    const confirmationContent = generateTourConfirmationContent(formData);
+    const emailData = {
+        message: tourDetails,
+        recipient: EMAIL_CONFIG.recipients.tour,
+        subject: `Room ${roomNumber} - Tour Organization Request`,
+        roomNumber: roomNumber
+    };
+    
+    showConfirmationModal(confirmationContent, emailData);
+}
+
+function handleTransportForm(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const customerName = formData.get('transportCustomerName');
+    const roomNumber = formData.get('transportRoomNumber');
+    
+    if (!customerName || !customerName.trim()) {
+        showErrorMessage('Please enter your name!');
+        return;
+    }
+    
+    if (!roomNumber || !roomNumber.trim()) {
+        showErrorMessage('Please enter your room number!');
+        return;
+    }
+    
+    const transportDetails = generateTransportMessage(formData);
+    const confirmationContent = generateTransportConfirmationContent(formData);
+    const emailData = {
+        message: transportDetails,
+        recipient: EMAIL_CONFIG.recipients.transport,
+        subject: `Room ${roomNumber} - Transportation Request`,
+        roomNumber: roomNumber
+    };
+    
+    showConfirmationModal(confirmationContent, emailData);
+}
+
+function handleHousekeepingForm(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const customerName = formData.get('housekeepingCustomerName');
+    const roomNumber = formData.get('housekeepingRoomNumber');
+    
+    if (!customerName || !customerName.trim()) {
+        showErrorMessage('Please enter your name!');
+        return;
+    }
+    
+    if (!roomNumber || !roomNumber.trim()) {
+        showErrorMessage('Please enter your room number!');
+        return;
+    }
+    
+    const housekeepingDetails = generateHousekeepingMessage(formData);
+    const confirmationContent = generateHousekeepingConfirmationContent(formData);
+    const emailData = {
+        message: housekeepingDetails,
+        recipient: EMAIL_CONFIG.recipients.housekeeping,
+        subject: `Room ${roomNumber} - Housekeeping Request`,
+        roomNumber: roomNumber
+    };
+    
+    showConfirmationModal(confirmationContent, emailData);
+}
+
+// Message Generation
+function generateFoodOrderMessage(customerName, roomNumber) {
+    let message = '🍽️ FOOD ORDER REQUEST\n\n';
+    message += `👤 Guest Name: ${customerName}\n`;
+    message += `🏨 Room Number: ${roomNumber}\n\n`;
+    message += '📋 Order Details:\n';
+    
+    let total = 0;
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        message += ` x${item.quantity} ${item.name} -> ${itemTotal.toFixed(2)}$\n`;
+    });
+    
+    message += `\n💰 Total: ${total.toFixed(2)}$\n`;
+    message += `\n📅 Order Date: ${new Date().toLocaleDateString()}\n`;
+    message += `🕐 Order Time: ${new Date().toLocaleTimeString()}\n`;
+    
+    return message;
+}
+
+function generateTourMessage(formData) {
+    let message = '🗺️ TOUR ORGANIZATION REQUEST\n\n';
+    message += `👤 Guest Name: ${formData.get('tourCustomerName')}\n`;
+    message += `🏨 Room Number: ${formData.get('tourRoomNumber')}\n\n`;
+    message += '📍 Destination: ' + formData.get('tourDestination') + '\n';
+    message += '📅 Date: ' + formData.get('tourDate') + '\n';
+    message += '🕐 Time: ' + formData.get('tourTime') + '\n';
+    message += '⏱️ Duration: ' + formData.get('tourDuration') + '\n';
+    message += '👥 Participants: ' + formData.get('tourParticipants') + '\n';
+    
+    if (formData.get('tourSpecialRequests')) {
+        message += '📝 Special Requests: ' + formData.get('tourSpecialRequests') + '\n';
+    }
+    
+    message += `\n📅 Request Date: ${new Date().toLocaleDateString()}\n`;
+    message += `🕐 Request Time: ${new Date().toLocaleTimeString()}\n`;
+    
+    return message;
+}
+
+function generateTransportMessage(formData) {
+    let message = '🚗 TRANSPORTATION REQUEST\n\n';
+    message += `👤 Guest Name: ${formData.get('transportCustomerName')}\n`;
+    message += `🏨 Room Number: ${formData.get('transportRoomNumber')}\n\n`;
+    message += '🚙 Transport Type: ' + formData.get('transportType') + '\n';
+    message += '📍 Pickup Location: ' + formData.get('pickupLocation') + '\n';
+    message += '🎯 Destination: ' + formData.get('destination') + '\n';
+    message += '📅 Date: ' + formData.get('transportDate') + '\n';
+    message += '🕐 Time: ' + formData.get('transportTime') + '\n';
+    message += '👥 Passengers: ' + formData.get('passengers') + '\n';
+    
+    if (formData.get('transportSpecialRequests')) {
+        message += '📝 Special Requests: ' + formData.get('transportSpecialRequests') + '\n';
+    }
+    
+    message += `\n📅 Request Date: ${new Date().toLocaleDateString()}\n`;
+    message += `🕐 Request Time: ${new Date().toLocaleTimeString()}\n`;
+    
+    return message;
+}
+
+function generateHousekeepingMessage(formData) {
+    let message = '🏠 HOUSEKEEPING REQUEST\n\n';
+    message += `👤 Guest Name: ${formData.get('housekeepingCustomerName')}\n`;
+    message += `🏨 Room Number: ${formData.get('housekeepingRoomNumber')}\n\n`;
+    message += '🧹 Service Type: ' + formData.get('serviceType') + '\n';
+    message += '📍 Property Address: ' + formData.get('propertyAddress') + '\n';
+    message += '🏘️ Property Size: ' + formData.get('propertySize') + '\n';
+    message += '📅 Preferred Date: ' + formData.get('cleaningDate') + '\n';
+    message += '🕐 Preferred Time: ' + formData.get('cleaningTime') + '\n';
+    message += '🔄 Frequency: ' + formData.get('cleaningFrequency') + '\n';
+    
+    if (formData.get('housekeepingSpecialRequests')) {
+        message += '📝 *Special Requests:* ' + formData.get('housekeepingSpecialRequests') + '\n';
+    }
+    
+    message += `\n📅 Request Date: ${new Date().toLocaleDateString()}\n`;
+    message += `🕐 Request Time: ${new Date().toLocaleTimeString()}\n`;
+    
+    return message;
+}
+
+// Email Integration using EmailJS
+function sendEmail(message, recipient, subject, roomNumber) {
+    // Show loading state
+    showSuccessMessage('Sending email...');
+    
+    // EmailJS configuration
+    const emailData = {
+        to_email: recipient,
+        subject: subject,
+        message: message,
+        from_name: `Room ${roomNumber}`,
+        reply_to: EMAIL_CONFIG.user
+    };
+    
+    // Send email using EmailJS
+    emailjs.send('service_eh9ii0d', 'template_wh5vo5k', emailData)
+        .then(function(response) {
+            console.log('Email sent successfully!', response.status, response.text);
+            showSuccessMessage('Email sent successfully!');
+            
+            // Clear cart if it's a food order
+            if (currentTab === 'food') {
+                cart = [];
+                updateCartDisplay();
+                document.getElementById('customerName').value = '';
+                document.getElementById('roomNumber').value = '';
+            } else {
+                // Reset forms for other services
+                const forms = document.querySelectorAll('.service-form');
+                forms.forEach(form => form.reset());
+            }
+        })
+        .catch(function(error) {
+            console.error('Error sending email:', error);
+            showErrorMessage('Failed to send email automatically. Please check your EmailJS configuration.');
+        });
+}
+
+// Confirmation Content Generators
+function generateFoodConfirmationContent(customerName, roomNumber) {
+    let total = 0;
+    let itemsHtml = '';
+    
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        itemsHtml += `
+            <div class="order-item">
+                <span>${item.name} x${item.quantity}</span>
+                <span>$${itemTotal.toFixed(2)}</span>
+            </div>
+        `;
+    });
+    
+    return `
+        <div class="confirmation-content">
+            <div class="room-number">
+                <i class="fas fa-user"></i> Your Name: ${customerName}
+            </div>
+            <div class="room-number">
+                <i class="fas fa-door-open"></i> Room Number: ${roomNumber}
+            </div>
+            <h4><i class="fas fa-utensils"></i> Food Order Details</h4>
+            <div class="order-items">
+                ${itemsHtml}
+                <div class="total">Total: $${total.toFixed(2)}</div>
+            </div>
+            <p><strong>Order Date:</strong> ${new Date().toLocaleDateString()}</p>
+            <p><strong>Order Time:</strong> ${new Date().toLocaleTimeString()}</p>
+        </div>
+    `;
+}
+
+function generateTourConfirmationContent(formData) {
+    return `
+        <div class="confirmation-content">
+            <div class="room-number">
+                <i class="fas fa-user"></i> Your Name: ${formData.get('tourCustomerName')}
+            </div>
+            <div class="room-number">
+                <i class="fas fa-door-open"></i> Room Number: ${formData.get('tourRoomNumber')}
+            </div>
+            <h4><i class="fas fa-map-marked-alt"></i> Tour Request Details</h4>
+            <p><strong>Destination:</strong> ${formData.get('tourDestination')}</p>
+            <p><strong>Date:</strong> ${formData.get('tourDate')}</p>
+            <p><strong>Time:</strong> ${formData.get('tourTime')}</p>
+            <p><strong>Duration:</strong> ${formData.get('tourDuration')}</p>
+            <p><strong>Participants:</strong> ${formData.get('tourParticipants')}</p>
+            ${formData.get('tourSpecialRequests') ? `<p><strong>Special Requests:</strong> ${formData.get('tourSpecialRequests')}</p>` : ''}
+            <p><strong>Request Date:</strong> ${new Date().toLocaleDateString()}</p>
+        </div>
+    `;
+}
+
+function generateTransportConfirmationContent(formData) {
+    return `
+        <div class="confirmation-content">
+            <div class="room-number">
+                <i class="fas fa-user"></i> Your Name: ${formData.get('transportCustomerName')}
+            </div>
+            <div class="room-number">
+                <i class="fas fa-door-open"></i> Room Number: ${formData.get('transportRoomNumber')}
+            </div>
+            <h4><i class="fas fa-car"></i> Transportation Request Details</h4>
+            <p><strong>Transport Type:</strong> ${formData.get('transportType')}</p>
+            <p><strong>Pickup Location:</strong> ${formData.get('pickupLocation')}</p>
+            <p><strong>Destination:</strong> ${formData.get('destination')}</p>
+            <p><strong>Date:</strong> ${formData.get('transportDate')}</p>
+            <p><strong>Time:</strong> ${formData.get('transportTime')}</p>
+            <p><strong>Passengers:</strong> ${formData.get('passengers')}</p>
+            ${formData.get('transportSpecialRequests') ? `<p><strong>Special Requests:</strong> ${formData.get('transportSpecialRequests')}</p>` : ''}
+            <p><strong>Request Date:</strong> ${new Date().toLocaleDateString()}</p>
+        </div>
+    `;
+}
+
+function generateHousekeepingConfirmationContent(formData) {
+    return `
+        <div class="confirmation-content">
+            <div class="room-number">
+                <i class="fas fa-user"></i> Your Name: ${formData.get('housekeepingCustomerName')}
+            </div>
+            <div class="room-number">
+                <i class="fas fa-door-open"></i> Room Number: ${formData.get('housekeepingRoomNumber')}
+            </div>
+            <h4><i class="fas fa-home"></i> Housekeeping Request Details</h4>
+            <p><strong>Service Type:</strong> ${formData.get('serviceType')}</p>
+            <p><strong>Property Address:</strong> ${formData.get('propertyAddress')}</p>
+            <p><strong>Property Size:</strong> ${formData.get('propertySize')}</p>
+            <p><strong>Preferred Date:</strong> ${formData.get('cleaningDate')}</p>
+            <p><strong>Preferred Time:</strong> ${formData.get('cleaningTime')}</p>
+            <p><strong>Frequency:</strong> ${formData.get('cleaningFrequency')}</p>
+            ${formData.get('housekeepingSpecialRequests') ? `<p><strong>Special Requests:</strong> ${formData.get('housekeepingSpecialRequests')}</p>` : ''}
+            <p><strong>Request Date:</strong> ${new Date().toLocaleDateString()}</p>
+        </div>
+    `;
+}
+
+// Confirmation Modal Functions
+let pendingEmailData = null;
+
+function showConfirmationModal(content, emailData) {
+    pendingEmailData = emailData;
+    document.getElementById('confirmationContent').innerHTML = content;
+    document.getElementById('confirmationModal').style.display = 'block';
+    
+    // Set up confirm button event listener
+    const confirmBtn = document.getElementById('confirmSendBtn');
+    confirmBtn.onclick = function() {
+        sendEmail(emailData.message, emailData.recipient, emailData.subject, emailData.roomNumber);
+        closeConfirmationModal();
+    };
+}
+
+function closeConfirmationModal() {
+    document.getElementById('confirmationModal').style.display = 'none';
+    pendingEmailData = null;
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('confirmationModal');
+    if (event.target === modal) {
+        closeConfirmationModal();
+    }
+}
+
+// Utility Functions
+function showSuccessMessage(text) {
+    // Remove existing messages
+    const existingMessages = document.querySelectorAll('.success-message, .error-message');
+    existingMessages.forEach(msg => msg.remove());
+    
+    // Create success message
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'success-message';
+    messageDiv.textContent = text;
+    
+    // Insert at the top of the current tab
+    const currentPanel = document.querySelector('.tab-panel.active');
+    currentPanel.insertBefore(messageDiv, currentPanel.firstChild);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        messageDiv.remove();
+    }, 3000);
+}
+
+function showErrorMessage(text) {
+    // Remove existing messages
+    const existingMessages = document.querySelectorAll('.success-message, .error-message');
+    existingMessages.forEach(msg => msg.remove());
+    
+    // Create error message
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'error-message';
+    messageDiv.textContent = text;
+    
+    // Insert at the top of the current tab
+    const currentPanel = document.querySelector('.tab-panel.active');
+    currentPanel.insertBefore(messageDiv, currentPanel.firstChild);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        messageDiv.remove();
+    }, 3000);
+}
+
+// Set minimum date to today for date inputs
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(input => {
+        input.min = today;
+    });
+});
+
+// Add loading state to forms
+function addLoadingState(form) {
+    form.classList.add('loading');
+    const submitBtn = form.querySelector('.submit-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    submitBtn.disabled = true;
+    
+    setTimeout(() => {
+        form.classList.remove('loading');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 2000);
+}
+
+// Enhanced form validation
+function validateForm(form) {
+    const requiredFields = form.querySelectorAll('[required]');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.style.borderColor = '#dc3545';
+            isValid = false;
+        } else {
+            field.style.borderColor = '#e9ecef';
+        }
+    });
+    
+    return isValid;
+}
+
+// Update form handlers to include validation
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('.service-form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!validateForm(this)) {
+                e.preventDefault();
+                showErrorMessage('Please fill in all required fields.');
+                return;
+            }
+        });
+    });
+});
