@@ -386,7 +386,7 @@ function generateHousekeepingMessage(formData) {
 // Email Integration using EmailJS
 function sendEmail(message, recipient, subject, roomNumber) {
     // Show loading state
-    showSuccessMessage('Sending email...');
+    showInfoMessage('Sending email...');
     
     // EmailJS configuration
     const emailData = {
@@ -550,45 +550,64 @@ window.onclick = function(event) {
     }
 }
 
+// Fixed Notification System
+function showNotification(message, type = 'info', duration = 4000) {
+    const container = document.getElementById('notificationContainer');
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    
+    // Set icon based on type
+    let icon = 'fas fa-info-circle';
+    if (type === 'success') icon = 'fas fa-check-circle';
+    if (type === 'error') icon = 'fas fa-exclamation-circle';
+    if (type === 'info') icon = 'fas fa-info-circle';
+    
+    notification.innerHTML = `
+        <i class="notification-icon ${icon}"></i>
+        <span class="notification-message">${message}</span>
+        <button class="notification-close" onclick="removeNotification(this)">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    // Add to container
+    container.appendChild(notification);
+    
+    // Auto remove after duration
+    if (duration > 0) {
+        setTimeout(() => {
+            removeNotification(notification.querySelector('.notification-close'));
+        }, duration);
+    }
+    
+    return notification;
+}
+
+function removeNotification(closeBtn) {
+    const notification = closeBtn.closest('.notification');
+    if (notification) {
+        notification.classList.add('removing');
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }
+}
+
 // Utility Functions
 function showSuccessMessage(text) {
-    // Remove existing messages
-    const existingMessages = document.querySelectorAll('.success-message, .error-message');
-    existingMessages.forEach(msg => msg.remove());
-    
-    // Create success message
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'success-message';
-    messageDiv.textContent = text;
-    
-    // Insert at the top of the current tab
-    const currentPanel = document.querySelector('.tab-panel.active');
-    currentPanel.insertBefore(messageDiv, currentPanel.firstChild);
-    
-    // Auto remove after 3 seconds
-    setTimeout(() => {
-        messageDiv.remove();
-    }, 3000);
+    showNotification(text, 'success', 3000);
 }
 
 function showErrorMessage(text) {
-    // Remove existing messages
-    const existingMessages = document.querySelectorAll('.success-message, .error-message');
-    existingMessages.forEach(msg => msg.remove());
-    
-    // Create error message
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'error-message';
-    messageDiv.textContent = text;
-    
-    // Insert at the top of the current tab
-    const currentPanel = document.querySelector('.tab-panel.active');
-    currentPanel.insertBefore(messageDiv, currentPanel.firstChild);
-    
-    // Auto remove after 3 seconds
-    setTimeout(() => {
-        messageDiv.remove();
-    }, 3000);
+    showNotification(text, 'error', 5000);
+}
+
+function showInfoMessage(text) {
+    showNotification(text, 'info', 4000);
 }
 
 // Set minimum date to today for date inputs
