@@ -44,7 +44,7 @@ body {
 .logo-circle {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #43a1c7 0%, #5bb3d9 100%);
+    background: linear-gradient(135deg, #43a1c7 0%, #2b5465 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -54,12 +54,12 @@ body {
 }
 
 .logo-image {
-    width: 500px;
-    height: 500px;
+    width: 6000px;
+    height: 6000px;
     object-fit: contain;
     border-radius: 50%;
-    max-width: 150%;
-    max-height: 150%;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .logo-crown {
@@ -499,36 +499,57 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .logo-circle {
-        width: 55px;
-        height: 55px;
+    .tab-btn {
+        padding: 12px 8px;
+        font-size: 0.75rem;
     }
     
-    .logo-image {
+    .tab-btn i {
+        font-size: 1rem;
+    }
+    
+    .tab-content {
+        padding: 15px;
+    }
+    
+    .menu-item {
+        padding: 15px;
+    }
+    
+    .item-name {
+        font-size: 1rem;
+    }
+    
+    .item-price {
+        font-size: 1rem;
+    }
+    
+    .add-btn {
         width: 40px;
         height: 40px;
+    }
+    
+    .cart-section {
+        padding: 15px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .order-btn,
+    .submit-btn {
+        padding: 15px;
+        font-size: 1rem;
     }
 }
 
 @media (max-width: 480px) {
     .app-header h1 {
         font-size: 1.5rem;
-    }
-    
-    .logo-circle {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .logo-image {
-        width: 35px;
-        height: 35px;
-    }
-    
-    .logo-crown {
-        font-size: 1rem;
-        top: -3px;
-        right: -3px;
     }
     
     .tab-btn {
