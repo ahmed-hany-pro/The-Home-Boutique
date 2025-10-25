@@ -53,12 +53,11 @@ body {
     box-shadow: 0 4px 15px rgba(67, 161, 199, 0.3);
 }
 
-.logo-monogram {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #2c3e50;
-    letter-spacing: 1px;
+.logo-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 50%;
 }
 
 .logo-crown {
@@ -226,7 +225,7 @@ body {
 
 .category-btn:hover {
     border-color: #43a1c7;
-    color: #43a1c7;
+    color: #000000;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
