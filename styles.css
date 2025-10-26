@@ -1146,3 +1146,250 @@ body {
         justify-content: center;
     }
 }
+
+/* Splash Screen */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #43a1c7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.8s ease-in-out;
+}
+
+.splash-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-content {
+    text-align: center;
+    color: white;
+    animation: splashFadeIn 1.5s ease-out;
+}
+
+.splash-logo {
+    margin-bottom: 30px;
+}
+
+.splash-logo .logo-circle {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #43a1c7 0%, #2b5465 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 8px 30px rgba(67, 161, 199, 0.4);
+    margin: 0 auto;
+    animation: logoFloat 2s ease-in-out infinite alternate;
+}
+
+.splash-logo .logo-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 50%;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.splash-logo .logo-crown {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 1.8rem;
+    color: #43a1c7;
+    text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    animation: crownGlow 2s ease-in-out infinite alternate;
+}
+
+.splash-text {
+    animation: textSlideUp 1s ease-out 0.5s both;
+}
+
+.splash-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+.splash-subtitle {
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 3px;
+    opacity: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    animation: subtitleFade 1s ease-out 1s both;
+}
+
+.splash-loading {
+    margin-top: 30px;
+}
+
+.loading-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.loading-dots span {
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    animation: dotBounce 1.4s ease-in-out infinite both;
+    opacity: 0.7;
+}
+
+.loading-dots span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0s;
+}
+
+/* Splash Screen Animations */
+@keyframes splashFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes logoFloat {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes crownGlow {
+    from {
+        text-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    }
+    to {
+        text-shadow: 0 3px 6px rgba(0,0,0,0.3), 0 0 20px rgba(67, 161, 199, 0.6);
+    }
+}
+
+@keyframes textSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes titleGlow {
+    from {
+        text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    to {
+        text-shadow: 0 4px 8px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.3);
+    }
+}
+
+@keyframes subtitleFade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 0.9;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dotBounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Mobile Responsive for Splash Screen */
+@media (max-width: 768px) {
+    .splash-logo .logo-circle {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .splash-logo .logo-image {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .splash-logo .logo-crown {
+        font-size: 1.5rem;
+        top: -6px;
+        right: -6px;
+    }
+    
+    .splash-title {
+        font-size: 2rem;
+        letter-spacing: 1px;
+    }
+    
+    .splash-subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .splash-logo .logo-circle {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .splash-logo .logo-image {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .splash-logo .logo-crown {
+        font-size: 1.2rem;
+        top: -5px;
+        right: -5px;
+    }
+    
+    .splash-title {
+        font-size: 1.8rem;
+    }
+    
+    .splash-subtitle {
+        font-size: 0.8rem;
+    }
+}

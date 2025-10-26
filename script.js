@@ -17,12 +17,28 @@ let currentTab = 'food';
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
+    initializeSplashScreen();
     initializeTabs();
     initializeMenu();
     initializeForms();
     updateCartDisplay();
     initializeHousekeepingCheckbox();
 });
+
+// Splash Screen functionality
+function initializeSplashScreen() {
+    const splashScreen = document.getElementById('splashScreen');
+    
+    // Show splash screen for 3 seconds, then fade out
+    setTimeout(() => {
+        splashScreen.classList.add('fade-out');
+        
+        // Remove splash screen from DOM after fade animation completes
+        setTimeout(() => {
+            splashScreen.style.display = 'none';
+        }, 800); // Match the CSS transition duration
+    }, 3000); // Show for 3 seconds
+}
 
 // Tab Navigation
 function initializeTabs() {
