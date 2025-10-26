@@ -192,7 +192,7 @@
                         <strong>Total: $<span id="totalPrice">0.00</span></strong>
                     </div>
                     <button class="order-btn" id="placeOrderBtn" disabled>
-                        <i class="fas fa-envelope"></i> Send Order via Email
+                        <i class="fas fa-utensils"></i>  Order Now 
                     </button>
                 </div>
             </div>
@@ -206,32 +206,32 @@
                 <form class="service-form" id="tourForm">
                     <div class="form-group">
                         <label for="tourCustomerName">Your Name *</label>
-                        <input type="text" id="tourCustomerName" required placeholder="Enter your name">
+                        <input type="text" id="tourCustomerName" name="tourCustomerName" required placeholder="Enter your name">
                     </div>
                     
                     <div class="form-group">
                         <label for="tourRoomNumber">Room Number *</label>
-                        <input type="text" id="tourRoomNumber" required placeholder="Enter your room number">
+                        <input type="text" id="tourRoomNumber" name="tourRoomNumber" required placeholder="Enter your room number">
                     </div>
                     
                     <div class="form-group">
                         <label for="tourDestination">Destination</label>
-                        <input type="text" id="tourDestination" required placeholder="Enter destination">
+                        <input type="text" id="tourDestination" name="tourDestination" required placeholder="Enter destination">
                     </div>
                     
                     <div class="form-group">
                         <label for="tourDate">Date</label>
-                        <input type="date" id="tourDate" required>
+                        <input type="date" id="tourDate" name="tourDate" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="tourTime">Time</label>
-                        <input type="time" id="tourTime" required>
+                        <input type="time" id="tourTime" name="tourTime" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="tourDuration">Duration</label>
-                        <select id="tourDuration" required>
+                        <select id="tourDuration" name="tourDuration" required>
                             <option value="">Select duration</option>
                             <option value="2 hours">2 hours</option>
                             <option value="4 hours">4 hours</option>
@@ -243,16 +243,16 @@
                     
                     <div class="form-group">
                         <label for="tourParticipants">Number of Participants</label>
-                        <input type="number" id="tourParticipants" min="1" required placeholder="Number of people">
+                        <input type="number" id="tourParticipants" name="tourParticipants" min="1" required placeholder="Number of people">
                     </div>
                     
                     <div class="form-group">
                         <label for="tourSpecialRequests">Special Requests</label>
-                        <textarea id="tourSpecialRequests" placeholder="Any special requirements or requests"></textarea>
+                        <textarea id="tourSpecialRequests" name="tourSpecialRequests" placeholder="Any special requirements or requests"></textarea>
                     </div>
                     
                     <button type="submit" class="submit-btn">
-                        <i class="fas fa-envelope"></i> Send Tour Request
+                        <i class="fas fa-map-marked-alt"></i> Send Tour Request
                     </button>
                 </form>
             </div>
@@ -266,58 +266,57 @@
                 <form class="service-form" id="transportForm">
                     <div class="form-group">
                         <label for="transportCustomerName">Your Name *</label>
-                        <input type="text" id="transportCustomerName" required placeholder="Enter your name">
+                        <input type="text" id="transportCustomerName" name="transportCustomerName" required placeholder="Enter your name">
                     </div>
                     
                     <div class="form-group">
                         <label for="transportRoomNumber">Room Number *</label>
-                        <input type="text" id="transportRoomNumber" required placeholder="Enter your room number">
+                        <input type="text" id="transportRoomNumber" name="transportRoomNumber" required placeholder="Enter your room number">
                     </div>
                     
                     <div class="form-group">
                         <label for="transportType">Transport Type</label>
-                        <select id="transportType" required>
+                        <select id="transportType" name="transportType" required>
                             <option value="">Select transport type</option>
                             <option value="Taxi">Taxi</option>
                             <option value="Bus">Bus</option>
                             <option value="Private Car">Private Car</option>
                             <option value="Van">Van</option>
-                            <option value="Motorcycle">Motorcycle</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
                         <label for="pickupLocation">Pickup Location</label>
-                        <input type="text" id="pickupLocation" required placeholder="Enter pickup address">
+                        <input type="text" id="pickupLocation" name="pickupLocation" required placeholder="Enter pickup address">
                     </div>
                     
                     <div class="form-group">
                         <label for="destination">Destination</label>
-                        <input type="text" id="destination" required placeholder="Enter destination">
+                        <input type="text" id="destination" name="destination" required placeholder="Enter destination">
                     </div>
                     
                     <div class="form-group">
                         <label for="transportDate">Date</label>
-                        <input type="date" id="transportDate" required>
+                        <input type="date" id="transportDate" name="transportDate" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="transportTime">Time</label>
-                        <input type="time" id="transportTime" required>
+                        <input type="time" id="transportTime" name="transportTime" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="passengers">Number of Passengers</label>
-                        <input type="number" id="passengers" min="1" required placeholder="Number of passengers">
+                        <input type="number" id="passengers" name="passengers" min="1" required placeholder="Number of passengers">
                     </div>
                     
                     <div class="form-group">
                         <label for="transportSpecialRequests">Special Requests</label>
-                        <textarea id="transportSpecialRequests" placeholder="Any special requirements"></textarea>
+                        <textarea id="transportSpecialRequests" name="transportSpecialRequests" placeholder="Any special requirements"></textarea>
                     </div>
                     
                     <button type="submit" class="submit-btn">
-                        <i class="fas fa-envelope"></i> Send Transport Request
+                        <i class="fas fa-car"></i> Send Transport Request
                     </button>
                 </form>
             </div>
@@ -331,79 +330,40 @@
                 <form class="service-form" id="housekeepingForm">
                     <div class="form-group">
                         <label for="housekeepingCustomerName">Your Name *</label>
-                        <input type="text" id="housekeepingCustomerName" required placeholder="Enter your name">
+                        <input type="text" id="housekeepingCustomerName" name="housekeepingCustomerName" required placeholder="Enter your name">
                     </div>
                     
                     <div class="form-group">
                         <label for="housekeepingRoomNumber">Room Number *</label>
-                        <input type="text" id="housekeepingRoomNumber" required placeholder="Enter your room number">
+                        <input type="text" id="housekeepingRoomNumber" name="housekeepingRoomNumber" required placeholder="Enter your room number">
                     </div>
                     
                     <div class="form-group">
-                        <label for="serviceType">Service Type</label>
-                        <select id="serviceType" required>
-                            <option value="">Select service type</option>
-                            <option value="Regular Cleaning">Regular Cleaning</option>
-                            <option value="Deep Cleaning">Deep Cleaning</option>
-                            <option value="Window Cleaning">Window Cleaning</option>
-                            <option value="Carpet Cleaning">Carpet Cleaning</option>
-                            <option value="Kitchen Cleaning">Kitchen Cleaning</option>
-                            <option value="Bathroom Cleaning">Bathroom Cleaning</option>
-                        </select>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="immediateService" name="immediateService">
+                            <span class="checkmark"></span>
+                            Request immediate housekeeping
+                        </label>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="propertyAddress">Property Address</label>
-                        <input type="text" id="propertyAddress" required placeholder="Enter property address">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="propertySize">Property Size</label>
-                        <select id="propertySize" required>
-                            <option value="">Select property size</option>
-                            <option value="Studio">Studio</option>
-                            <option value="1 Bedroom">1 Bedroom</option>
-                            <option value="2 Bedrooms">2 Bedrooms</option>
-                            <option value="3 Bedrooms">3 Bedrooms</option>
-                            <option value="4+ Bedrooms">4+ Bedrooms</option>
-                            <option value="Office">Office</option>
-                            <option value="Commercial">Commercial</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
+                    <div class="form-group" id="dateTimeFields">
                         <label for="cleaningDate">Preferred Date</label>
-                        <input type="date" id="cleaningDate" required>
+                        <input type="date" id="cleaningDate" name="cleaningDate" required>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group" id="timeField">
                         <label for="cleaningTime">Preferred Time</label>
-                        <select id="cleaningTime" required>
-                            <option value="">Select time</option>
-                            <option value="Morning (8AM-12PM)">Morning (8AM-12PM)</option>
-                            <option value="Afternoon (12PM-4PM)">Afternoon (12PM-4PM)</option>
-                            <option value="Evening (4PM-8PM)">Evening (4PM-8PM)</option>
-                        </select>
+                        <input type="time" id="cleaningTime" name="cleaningTime" required>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="cleaningFrequency">Frequency</label>
-                        <select id="cleaningFrequency" required>
-                            <option value="">Select frequency</option>
-                            <option value="One-time">One-time</option>
-                            <option value="Weekly">Weekly</option>
-                            <option value="Bi-weekly">Bi-weekly</option>
-                            <option value="Monthly">Monthly</option>
-                        </select>
-                    </div>
                     
                     <div class="form-group">
                         <label for="housekeepingSpecialRequests">Special Requests</label>
-                        <textarea id="housekeepingSpecialRequests" placeholder="Any special requirements or areas to focus on"></textarea>
+                        <textarea id="housekeepingSpecialRequests" name="housekeepingSpecialRequests" placeholder="Any special requirements or areas to focus on"></textarea>
                     </div>
                     
                     <button type="submit" class="submit-btn">
-                        <i class="fas fa-envelope"></i> Send Housekeeping Request
+                        <i class="fas fa-home"></i> Send Housekeeping Request
                     </button>
                 </form>
             </div>
@@ -430,11 +390,11 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button class="confirm-btn" id="confirmSendBtn">
+                    <i class="fas fa-check"></i> Confirm 
+                </button>
                 <button class="cancel-btn" onclick="closeConfirmationModal()">
                     <i class="fas fa-times"></i> Cancel
-                </button>
-                <button class="confirm-btn" id="confirmSendBtn">
-                    <i class="fas fa-envelope"></i> Send Email
                 </button>
             </div>
         </div>

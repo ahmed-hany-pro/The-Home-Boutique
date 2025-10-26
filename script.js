@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeMenu();
     initializeForms();
     updateCartDisplay();
+    initializeHousekeepingCheckbox();
 });
 
 // Tab Navigation
@@ -178,6 +179,44 @@ function initializeForms() {
     // Housekeeping form
     const housekeepingForm = document.getElementById('housekeepingForm');
     housekeepingForm.addEventListener('submit', handleHousekeepingForm);
+}
+
+// Housekeeping immediate service checkbox functionality
+function initializeHousekeepingCheckbox() {
+    const immediateServiceCheckbox = document.getElementById('immediateService');
+    const dateTimeFields = document.getElementById('dateTimeFields');
+    const timeField = document.getElementById('timeField');
+    const cleaningDate = document.getElementById('cleaningDate');
+    const cleaningTime = document.getElementById('cleaningTime');
+    const checkboxLabel = document.querySelector('.checkbox-label');
+
+    if (immediateServiceCheckbox) {
+        immediateServiceCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Add checked class for styling
+                checkboxLabel.classList.add('checked');
+                
+                // Hide date and time fields when immediate service is selected
+                dateTimeFields.style.display = 'none';
+                timeField.style.display = 'none';
+                
+                // Remove required attribute from date and time fields
+                cleaningDate.removeAttribute('required');
+                cleaningTime.removeAttribute('required');
+            } else {
+                // Remove checked class
+                checkboxLabel.classList.remove('checked');
+                
+                // Show date and time fields when immediate service is not selected
+                dateTimeFields.style.display = 'block';
+                timeField.style.display = 'block';
+                
+                // Add required attribute back to date and time fields
+                cleaningDate.setAttribute('required', 'required');
+                cleaningTime.setAttribute('required', 'required');
+            }
+        });
+    }
 }
 
 function handleFoodOrder(e) {
@@ -366,12 +405,16 @@ function generateHousekeepingMessage(formData) {
     let message = '🏠 HOUSEKEEPING REQUEST\n\n';
     message += `👤 Guest Name: ${formData.get('housekeepingCustomerName')}\n`;
     message += `🏨 Room Number: ${formData.get('housekeepingRoomNumber')}\n\n`;
-    message += '🧹 Service Type: ' + formData.get('serviceType') + '\n';
-    message += '📍 Property Address: ' + formData.get('propertyAddress') + '\n';
-    message += '🏘️ Property Size: ' + formData.get('propertySize') + '\n';
-    message += '📅 Preferred Date: ' + formData.get('cleaningDate') + '\n';
-    message += '🕐 Preferred Time: ' + formData.get('cleaningTime') + '\n';
-    message += '🔄 Frequency: ' + formData.get('cleaningFrequency') + '\n';
+    
+    // Check if immediate service is requested
+    const immediateService = document.getElementById('immediateService').checked;
+    if (immediateService) {
+        message += '⚡ SERVICE TYPE: IMMEDIATE SERVICE REQUESTED\n';
+        message += '🕐 Requested Time: ASAP (As Soon As Possible)\n';
+    } else {
+        message += '📅 Preferred Date: ' + formData.get('cleaningDate') + '\n';
+        message += '🕐 Preferred Time: ' + formData.get('cleaningTime') + '\n';
+    }
     
     if (formData.get('housekeepingSpecialRequests')) {
         message += '📝 *Special Requests:* ' + formData.get('housekeepingSpecialRequests') + '\n';
@@ -386,7 +429,7 @@ function generateHousekeepingMessage(formData) {
 // Email Integration using EmailJS
 function sendEmail(message, recipient, subject, roomNumber) {
     // Show loading state
-    showInfoMessage('Sending email...');
+    showInfoMessage('Sending your request...');
     
     // EmailJS configuration
     const emailData = {
@@ -400,8 +443,8 @@ function sendEmail(message, recipient, subject, roomNumber) {
     // Send email using EmailJS
     emailjs.send('service_eh9ii0d', 'template_wh5vo5k', emailData)
         .then(function(response) {
-            console.log('Email sent successfully!', response.status, response.text);
-            showSuccessMessage('Email sent successfully!');
+            console.log('Your request sent successfully!', response.status, response.text);
+            showSuccessMessage('Your request sent successfully!');
             
             // Clear cart if it's a food order
             if (currentTab === 'food') {
@@ -416,8 +459,8 @@ function sendEmail(message, recipient, subject, roomNumber) {
             }
         })
         .catch(function(error) {
-            console.error('Error sending email:', error);
-            showErrorMessage('Failed to send email automatically. Please check your EmailJS configuration.');
+            console.error('Error sending request:', error);
+            showErrorMessage('Failed to send request automatically. Please try again.');
         });
 }
 
@@ -500,6 +543,21 @@ function generateTransportConfirmationContent(formData) {
 }
 
 function generateHousekeepingConfirmationContent(formData) {
+    const immediateService = document.getElementById('immediateService').checked;
+    
+    let serviceDetails = '';
+    if (immediateService) {
+        serviceDetails = `
+            <p><strong>Service Type:</strong> <span style="color: #43a1c7; font-weight: 600;">⚡ IMMEDIATE SERVICE</span></p>
+            <p><strong>Requested Time:</strong> ASAP (As Soon As Possible)</p>
+        `;
+    } else {
+        serviceDetails = `
+            <p><strong>Preferred Date:</strong> ${formData.get('cleaningDate')}</p>
+            <p><strong>Preferred Time:</strong> ${formData.get('cleaningTime')}</p>
+        `;
+    }
+    
     return `
         <div class="confirmation-content">
             <div class="room-number">
@@ -509,12 +567,7 @@ function generateHousekeepingConfirmationContent(formData) {
                 <i class="fas fa-door-open"></i> Room Number: ${formData.get('housekeepingRoomNumber')}
             </div>
             <h4><i class="fas fa-home"></i> Housekeeping Request Details</h4>
-            <p><strong>Service Type:</strong> ${formData.get('serviceType')}</p>
-            <p><strong>Property Address:</strong> ${formData.get('propertyAddress')}</p>
-            <p><strong>Property Size:</strong> ${formData.get('propertySize')}</p>
-            <p><strong>Preferred Date:</strong> ${formData.get('cleaningDate')}</p>
-            <p><strong>Preferred Time:</strong> ${formData.get('cleaningTime')}</p>
-            <p><strong>Frequency:</strong> ${formData.get('cleaningFrequency')}</p>
+            ${serviceDetails}
             ${formData.get('housekeepingSpecialRequests') ? `<p><strong>Special Requests:</strong> ${formData.get('housekeepingSpecialRequests')}</p>` : ''}
             <p><strong>Request Date:</strong> ${new Date().toLocaleDateString()}</p>
         </div>
@@ -651,16 +704,5 @@ function validateForm(form) {
     return isValid;
 }
 
-// Update form handlers to include validation
-document.addEventListener('DOMContentLoaded', function() {
-    const forms = document.querySelectorAll('.service-form');
-    forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            if (!validateForm(this)) {
-                e.preventDefault();
-                showErrorMessage('Please fill in all required fields.');
-                return;
-            }
-        });
-    });
-});
+// Note: Form validation is handled individually in each form handler
+// (handleTourForm, handleTransportForm, handleHousekeepingForm)

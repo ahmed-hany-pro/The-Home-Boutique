@@ -219,8 +219,8 @@ body {
 }
 
 .category-btn.active {
-    background: linear-gradient(135deg, #43a1c7 0%, #5bb3d9 100%);
-    color: white;
+    background: linear-gradient(135deg, #43a1c7 0%, #356980 100%);
+    color: white; 
     border-color: #43a1c7;
     box-shadow: 0 4px 15px rgba(67, 161, 199, 0.3);
 }
@@ -283,17 +283,17 @@ body {
 .item-price {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #43a1c7;
+    color: #000000;
     margin: 0 20px;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Lora', serif;
 }
 
 .add-btn {
     width: 45px;
     height: 45px;
     border: none;
-    background: linear-gradient(135deg, #43a1c7 0%, #5bb3d9 100%);
-    color: white;
+    background: linear-gradient(135deg, #43a1c7 0%, #4890af 100%);
+    color: white; 
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -394,9 +394,9 @@ body {
     border-top: 2px solid #e9ecef;
     text-align: center;
     font-size: 1.2rem;
-    color: #43a1c7;
+    color: #01a209;
     font-weight: 700;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Lora', serif;
 }
 
 .empty-cart {
@@ -415,6 +415,72 @@ body {
     border: 1px solid #f8f9fa;
     max-width: 600px;
     margin: 0 auto;
+}
+
+/* Custom Checkbox Styling */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 0;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.checkbox-label:hover {
+    border-color: #43a1c7;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(67, 161, 199, 0.2);
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #6c757d;
+    border-radius: 4px;
+    margin-right: 12px;
+    position: relative;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
+    background: linear-gradient(135deg, #43a1c7 0%, #356980 100%);
+    border-color: #43a1c7;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.checkbox-label input[type="checkbox"]:checked ~ span:not(.checkmark) {
+    color: #43a1c7;
+    font-weight: 600;
+}
+
+.checkbox-label.checked {
+    border-color: #43a1c7;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
+    box-shadow: 0 4px 15px rgba(67, 161, 199, 0.2);
+    transform: translateY(-2px);
 }
 
 .form-group {
@@ -462,7 +528,7 @@ body {
 .submit-btn {
     width: 100%;
     padding: 18px;
-    background: linear-gradient(135deg, #43a1c7 0%, #5bb3d9 100%);
+    background: #01a209;
     color: white;
     border: none;
     border-radius: 15px;
@@ -883,19 +949,19 @@ body {
 }
 
 .cancel-btn {
-    background: #6c757d;
+    background: #e50000;
     color: white;
     box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
 }
 
 .cancel-btn:hover {
-    background: #5a6268;
+    background: #e50000;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
 }
 
 .confirm-btn {
-    background: linear-gradient(135deg, #43a1c7 0%, #5bb3d9 100%);
+    background: #01a209;
     color: white;
     box-shadow: 0 4px 15px rgba(67, 161, 199, 0.3);
 }
@@ -956,11 +1022,11 @@ body {
 .confirmation-content .total {
     font-weight: 700;
     font-size: 1.2rem;
-    color: #43a1c7;
+    color: #01a209;
     margin-top: 15px;
     padding-top: 15px;
     border-top: 2px solid #e9ecef;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Lora', serif;
 }
 
 /* Modal Animations */
