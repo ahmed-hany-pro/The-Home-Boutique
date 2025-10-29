@@ -11,6 +11,12 @@ const EMAIL_CONFIG = {
     }
 };
 
+// Google Sheets Configuration
+const GOOGLE_SHEETS_CONFIG = {
+    webAppUrl: 'https://script.google.com/macros/s/AKfycbzA5nHOgb44S_ivrnDz2G3vLDYppNKSLdZwGjCUSTyGrd5Q1vR0z14GljwKm8Orf19k/exec', // Replace with your Web App URL
+    enableLogging: true // Set to false to disable logging
+};
+
 // Global Variables
 let cart = [];
 let currentTab = 'food';
@@ -258,11 +264,32 @@ function handleFoodOrder(e) {
 
     const orderDetails = generateFoodOrderMessage(customerName, roomNumber);
     const confirmationContent = generateFoodConfirmationContent(customerName, roomNumber);
+    
+    // Prepare Google Sheets data
+    let orderTotal = 0;
+    let orderItems = [];
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        orderTotal += itemTotal;
+        orderItems.push(`${item.name} x${item.quantity}`);
+    });
+    
+    const orderData = {
+        type: 'Food Order',
+        customerName: customerName,
+        roomNumber: roomNumber,
+        items: orderItems.join(', '),
+        total: orderTotal.toFixed(2),
+        orderDate: new Date().toISOString().split('T')[0],
+        orderTime: new Date().toLocaleTimeString()
+    };
+    
     const emailData = {
         message: orderDetails,
         recipient: EMAIL_CONFIG.recipients.food,
         subject: `Room ${roomNumber} - Food Order Request`,
-        roomNumber: roomNumber
+        roomNumber: roomNumber,
+        orderData: orderData
     };
     
     showConfirmationModal(confirmationContent, emailData);
@@ -287,11 +314,28 @@ function handleTourForm(e) {
     
     const tourDetails = generateTourMessage(formData);
     const confirmationContent = generateTourConfirmationContent(formData);
+    
+    // Prepare Google Sheets data
+    const orderData = {
+        type: 'Tour Organization',
+        customerName: formData.get('tourCustomerName'),
+        roomNumber: formData.get('tourRoomNumber'),
+        destination: formData.get('tourDestination'),
+        date: formData.get('tourDate'),
+        time: formData.get('tourTime'),
+        duration: formData.get('tourDuration'),
+        participants: formData.get('tourParticipants'),
+        specialRequests: formData.get('tourSpecialRequests') || '',
+        orderDate: new Date().toISOString().split('T')[0],
+        orderTime: new Date().toLocaleTimeString()
+    };
+    
     const emailData = {
         message: tourDetails,
         recipient: EMAIL_CONFIG.recipients.tour,
         subject: `Room ${roomNumber} - Tour Organization Request`,
-        roomNumber: roomNumber
+        roomNumber: roomNumber,
+        orderData: orderData
     };
     
     showConfirmationModal(confirmationContent, emailData);
@@ -316,11 +360,29 @@ function handleTransportForm(e) {
     
     const transportDetails = generateTransportMessage(formData);
     const confirmationContent = generateTransportConfirmationContent(formData);
+    
+    // Prepare Google Sheets data
+    const orderData = {
+        type: 'Transportation',
+        customerName: formData.get('transportCustomerName'),
+        roomNumber: formData.get('transportRoomNumber'),
+        transportType: formData.get('transportType'),
+        pickupLocation: formData.get('pickupLocation'),
+        destination: formData.get('destination'),
+        date: formData.get('transportDate'),
+        time: formData.get('transportTime'),
+        passengers: formData.get('passengers'),
+        specialRequests: formData.get('transportSpecialRequests') || '',
+        orderDate: new Date().toISOString().split('T')[0],
+        orderTime: new Date().toLocaleTimeString()
+    };
+    
     const emailData = {
         message: transportDetails,
         recipient: EMAIL_CONFIG.recipients.transport,
         subject: `Room ${roomNumber} - Transportation Request`,
-        roomNumber: roomNumber
+        roomNumber: roomNumber,
+        orderData: orderData
     };
     
     showConfirmationModal(confirmationContent, emailData);
@@ -442,10 +504,42 @@ function generateHousekeepingMessage(formData) {
     return message;
 }
 
+// Google Sheets Integration
+function saveToGoogleSheets(orderData) {
+    if (!GOOGLE_SHEETS_CONFIG.enableLogging) {
+        return;
+    }
+    
+    // Check if sheet URL is configured
+    if (!GOOGLE_SHEETS_CONFIG.webAppUrl || GOOGLE_SHEETS_CONFIG.webAppUrl === 'https://script.google.com/macros/s/YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL/exec') {
+        console.log('Google Sheets URL not configured. Skipping data save.');
+        return;
+    }
+    
+    // Send data to Google Sheets (one URL handles all tabs)
+    fetch(GOOGLE_SHEETS_CONFIG.webAppUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
+    }).then(() => {
+        console.log(orderData.type + ' saved to Google Sheets');
+    }).catch(error => {
+        console.error('Error saving to Google Sheets:', error);
+    });
+}
+
 // Email Integration using EmailJS
-function sendEmail(message, recipient, subject, roomNumber) {
+function sendEmail(message, recipient, subject, roomNumber, orderData = null) {
     // Show loading state
     showInfoMessage('Sending your request...');
+    
+    // Save to Google Sheets if orderData is provided
+    if (orderData) {
+        saveToGoogleSheets(orderData);
+    }
     
     // EmailJS configuration
     const emailData = {
@@ -601,7 +695,7 @@ function showConfirmationModal(content, emailData) {
     // Set up confirm button event listener
     const confirmBtn = document.getElementById('confirmSendBtn');
     confirmBtn.onclick = function() {
-        sendEmail(emailData.message, emailData.recipient, emailData.subject, emailData.roomNumber);
+        sendEmail(emailData.message, emailData.recipient, emailData.subject, emailData.roomNumber, emailData.orderData);
         closeConfirmationModal();
     };
 }
