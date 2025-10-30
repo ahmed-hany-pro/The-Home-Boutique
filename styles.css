@@ -109,7 +109,7 @@ body {
     display: block;
     position: sticky;
     top: 100px;
-    height: 85px; /* matches space between nav (100px) and categories (185px) */
+    height: 60px; /* space between tabs (100px) and categories (160px) */
     background: #fdfdfd;
     z-index: 90; /* below categories (98) */
 }
