@@ -245,25 +245,66 @@ body {
 }
 
 .menu-category.active {
-    display: block;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
 }
 
 .menu-item {
     display: flex;
-    align-items: center;
-    padding: 20px;
-    margin-bottom: 15px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
     background: white;
-    border-radius: 15px;
+    border-radius: 16px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     transition: all 0.3s ease;
-    border: 1px solid #f8f9fa;
+    border: 1px solid #f1f3f5;
+    overflow: hidden;
 }
 
 .menu-item:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     border-color: #43a1c7;
+}
+
+/* Menu card content */
+.item-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #f1f3f5;
+    position: relative;
+    overflow: hidden;
+}
+
+.item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.item-body {
+    padding: 12px 12px 6px 12px;
+    flex: 1;
+}
+
+.item-title {
+    color: #2c3e50;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-family: 'Playfair Display', serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-subtitle {
+    color: #8a94a6;
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
 .item-info {
@@ -284,20 +325,27 @@ body {
     line-height: 1.5;
 }
 
+.item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px 12px 12px;
+    gap: 12px;
+}
+
 .item-price {
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: #000000;
-    margin: 0 20px;
     font-family: 'Lora', serif;
 }
 
 .add-btn {
-    width: 45px;
-    height: 45px;
+    width: 42px;
+    height: 42px;
     border: none;
     background: linear-gradient(135deg, #43a1c7 0%, #4890af 100%);
-    color: white; 
+    color: white;
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -582,8 +630,8 @@ body {
         padding: 15px;
     }
     
-    .menu-item {
-        padding: 15px;
+    .menu-category.active {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
     
     .item-name {
@@ -595,8 +643,8 @@ body {
     }
     
     .add-btn {
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
     }
     
     .cart-section {
@@ -635,8 +683,12 @@ body {
         padding: 15px;
     }
     
-    .menu-item {
-        padding: 12px;
+    .menu-category.active {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .item-image {
+        aspect-ratio: 1 / 1;
     }
     
     .item-info h4 {
@@ -649,12 +701,11 @@ body {
     
     .item-price {
         font-size: 1rem;
-        margin: 0 10px;
     }
     
     .add-btn {
-        width: 35px;
-        height: 35px;
+        width: 34px;
+        height: 34px;
     }
     
     .service-form {
