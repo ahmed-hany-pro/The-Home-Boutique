@@ -86,6 +86,12 @@ function initializeMenu() {
         });
     });
 
+    // Set the first category as active by default on load
+    if (categoryButtons.length > 0) {
+        const firstCategory = categoryButtons[0].getAttribute('data-category');
+        switchCategory(firstCategory);
+    }
+
     // Add to cart buttons
     const addButtons = document.querySelectorAll('.add-btn');
     addButtons.forEach(button => {

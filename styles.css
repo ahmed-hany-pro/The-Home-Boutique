@@ -202,6 +202,11 @@ body {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     padding: 5px 0;
+    position: sticky;
+    top: 185px;
+    z-index: 98;
+    background: linear-gradient(to bottom, #fdfdfd, #fcfcfd);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 .category-btn {
