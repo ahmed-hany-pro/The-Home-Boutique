@@ -1183,8 +1183,9 @@
                         <p class="empty-cart">Your cart is empty</p>
                     </div>
                     <div class="cart-total">
-                        <strong>Total: $<span id="totalPrice">0.00</span></strong>
+                        <strong>Total: <span id="totalPrice">0.00</span> L.E</strong>
                     </div>
+                    
                     <button class="order-btn" id="placeOrderBtn" disabled>
                         <i class="fas fa-utensils"></i>  Order Now 
                     </button>
@@ -1240,6 +1241,19 @@
                         <input type="number" id="tourParticipants" name="tourParticipants" min="1" required placeholder="Number of people">
                     </div>
                     
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="tourNeedGuide" name="tourNeedGuide">
+                            <span class="checkmark"></span>
+                            Need a tour guide
+                        </label>
+                    </div>
+
+                    <div class="form-group" id="tourGuideLanguageGroup" style="display: none;">
+                        <label for="tourGuideLanguage">Preferred Guide Language</label>
+                        <input type="text" id="tourGuideLanguage" name="tourGuideLanguage" placeholder="e.g., English, Arabic, French...">
+                    </div>
+
                     <div class="form-group">
                         <label for="tourSpecialRequests">Special Requests</label>
                         <textarea id="tourSpecialRequests" name="tourSpecialRequests" placeholder="Any special requirements or requests"></textarea>

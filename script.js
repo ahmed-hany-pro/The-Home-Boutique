@@ -13,7 +13,7 @@ const EMAIL_CONFIG = {
 
 // Google Sheets Configuration
 const GOOGLE_SHEETS_CONFIG = {
-    webAppUrl: 'https://script.google.com/macros/s/AKfycbzA5nHOgb44S_ivrnDz2G3vLDYppNKSLdZwGjCUSTyGrd5Q1vR0z14GljwKm8Orf19k/exec', // Replace with your Web App URL
+    webAppUrl: 'https://script.google.com/macros/s/AKfycbzbbe5iB4YX-j8pZS6WjPlYkrhZz5Np1kpTb87bAoKBEvOAGIbYfNhXzQRRoRlKHdLp/exec', // Replace with your Web App URL
     enableLogging: true // Set to false to disable logging
 };
 
@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeForms();
     updateCartDisplay();
     initializeHousekeepingCheckbox();
+    initializeTourGuideToggle();
 });
 
 // Splash Screen functionality
@@ -174,7 +175,7 @@ function updateCartDisplay() {
             <div class="cart-item">
                 <div class="cart-item-info">
                     <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">$${item.price.toFixed(2)} each</div>
+                    <div class="cart-item-price">${itemTotal.toFixed(2)} L.E</div>
                 </div>
                 <div class="cart-item-controls">
                     <button class="quantity-btn" onclick="updateQuantity('${item.name}', -1)">-</button>
@@ -245,6 +246,30 @@ function initializeHousekeepingCheckbox() {
             }
         });
     }
+}
+
+// Tour guide toggle (show language when checkbox is checked)
+function initializeTourGuideToggle() {
+    const needGuideCheckbox = document.getElementById('tourNeedGuide');
+    const languageGroup = document.getElementById('tourGuideLanguageGroup');
+    const languageInput = document.getElementById('tourGuideLanguage');
+
+    if (!needGuideCheckbox || !languageGroup || !languageInput) {
+        return;
+    }
+
+    const updateVisibility = () => {
+        if (needGuideCheckbox.checked) {
+            languageGroup.style.display = 'block';
+        } else {
+            languageGroup.style.display = 'none';
+            languageInput.value = '';
+        }
+    };
+
+    needGuideCheckbox.addEventListener('change', updateVisibility);
+    // Initialize on load
+    updateVisibility();
 }
 
 function handleFoodOrder(e) {
@@ -331,6 +356,8 @@ function handleTourForm(e) {
         time: formData.get('tourTime'),
         duration: formData.get('tourDuration'),
         participants: formData.get('tourParticipants'),
+        needGuide: formData.get('tourNeedGuide') ? true : false,
+        guideLanguage: formData.get('tourGuideLanguage') || '',
         specialRequests: formData.get('tourSpecialRequests') || '',
         orderDate: new Date().toISOString().split('T')[0],
         orderTime: new Date().toLocaleTimeString()
@@ -434,10 +461,10 @@ function generateFoodOrderMessage(customerName, roomNumber) {
     cart.forEach(item => {
         const itemTotal = item.price * item.quantity;
         total += itemTotal;
-        message += ` x${item.quantity} ${item.name} -> ${itemTotal.toFixed(2)}$\n`;
+        message += ` x${item.quantity} ${item.name} -> ${itemTotal.toFixed(2)} L.E\n`;
     });
     
-    message += `\n💰 Total: ${total.toFixed(2)}$\n`;
+    message += `\n💰 Total: ${total.toFixed(2)} L.E\n`;
     message += `\n📅 Order Date: ${new Date().toLocaleDateString()}\n`;
     message += `🕐 Order Time: ${new Date().toLocaleTimeString()}\n`;
     
@@ -453,6 +480,15 @@ function generateTourMessage(formData) {
     message += '🕐 Time: ' + formData.get('tourTime') + '\n';
     message += '⏱️ Duration: ' + formData.get('tourDuration') + '\n';
     message += '👥 Participants: ' + formData.get('tourParticipants') + '\n';
+    const needGuide = formData.get('tourNeedGuide') ? true : false;
+    if (needGuide) {
+        message += '🧭 Tour Guide: Required\n';
+        if (formData.get('tourGuideLanguage')) {
+            message += '🗣️ Guide Language: ' + formData.get('tourGuideLanguage') + '\n';
+        }
+    } else {
+        message += '🧭 Tour Guide: Not required\n';
+    }
     
     if (formData.get('tourSpecialRequests')) {
         message += '📝 Special Requests: ' + formData.get('tourSpecialRequests') + '\n';
@@ -591,7 +627,7 @@ function generateFoodConfirmationContent(customerName, roomNumber) {
         itemsHtml += `
             <div class="order-item">
                 <span>${item.name} x${item.quantity}</span>
-                <span>$${itemTotal.toFixed(2)}</span>
+                <span>${itemTotal.toFixed(2)} L.E</span>
             </div>
         `;
     });
@@ -607,7 +643,7 @@ function generateFoodConfirmationContent(customerName, roomNumber) {
             <h4><i class="fas fa-utensils"></i> Food Order Details</h4>
             <div class="order-items">
                 ${itemsHtml}
-                <div class="total">Total: $${total.toFixed(2)}</div>
+                <div class="total">Total: ${total.toFixed(2)} L.E</div>
             </div>
             <p><strong>Order Date:</strong> ${new Date().toLocaleDateString()}</p>
             <p><strong>Order Time:</strong> ${new Date().toLocaleTimeString()}</p>
@@ -630,6 +666,8 @@ function generateTourConfirmationContent(formData) {
             <p><strong>Time:</strong> ${formData.get('tourTime')}</p>
             <p><strong>Duration:</strong> ${formData.get('tourDuration')}</p>
             <p><strong>Participants:</strong> ${formData.get('tourParticipants')}</p>
+            <p><strong>Tour Guide:</strong> ${formData.get('tourNeedGuide') ? 'Required' : 'Not required'}</p>
+            ${formData.get('tourNeedGuide') && formData.get('tourGuideLanguage') ? `<p><strong>Guide Language:</strong> ${formData.get('tourGuideLanguage')}</p>` : ''}
             ${formData.get('tourSpecialRequests') ? `<p><strong>Special Requests:</strong> ${formData.get('tourSpecialRequests')}</p>` : ''}
             <p><strong>Request Date:</strong> ${new Date().toLocaleDateString()}</p>
         </div>
