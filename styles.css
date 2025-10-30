@@ -201,7 +201,7 @@ body {
     margin-bottom: 25px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 20px 0;
+    padding: 200px 0;
     position: sticky;
     top: 185px;
     z-index: 98;
