@@ -46,6 +46,202 @@ function initializeSplashScreen() {
         }, 800); // Match the CSS transition duration
     }, 3000); // Show for 3 seconds
 }
+/* ---------- MENU LAYOUT (grid / carousel) ---------- */
+/* ---------- Make ONLY the active category act as a carousel ---------- */
+
+/* ---------- Unified Layout + Category behavior (default: GRID) ---------- */
+
+// load saved layout or default to 'grid'
+let menuLayout = localStorage.getItem('menuLayout');
+if (!menuLayout) {
+  menuLayout = 'grid';
+  localStorage.setItem('menuLayout', menuLayout);
+}
+
+function getActivePanel() {
+  return document.querySelector('.menu-category.active');
+}
+
+function applyMenuLayout() {
+  // remove horizontal from all panels
+  document.querySelectorAll('.menu-category').forEach(panel => {
+    panel.classList.remove('horizontal');
+  });
+
+  // add horizontal only to the active panel when carousel mode is set
+  const active = getActivePanel();
+  if (active && menuLayout === 'carousel') {
+    active.classList.add('horizontal');
+  }
+
+  // update layout buttons UI
+  document.querySelectorAll('.layout-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.layout === menuLayout);
+  });
+
+  // show/hide arrows
+  const arrows = document.querySelector('.carousel-arrows');
+  if (arrows) arrows.classList.toggle('hidden', menuLayout !== 'carousel');
+}
+
+// Click handler for layout buttons and carousel arrows (delegated)
+document.addEventListener('click', (e) => {
+  const layoutBtn = e.target.closest('.layout-btn');
+  if (layoutBtn) {
+    // change layout and persist
+    menuLayout = layoutBtn.dataset.layout || 'grid';
+    localStorage.setItem('menuLayout', menuLayout);
+    applyMenuLayout();
+
+    // reset scroll of active panel for clarity
+    const activePanel = getActivePanel();
+    if (activePanel) activePanel.scrollTo({ left: 0, behavior: 'smooth' });
+    return;
+  }
+
+  // arrows: scroll the currently active panel only
+  const prev = e.target.closest('.scroller-prev');
+  const next = e.target.closest('.scroller-next');
+  if (prev || next) {
+    const active = getActivePanel();
+    if (!active) return;
+    const amount = Math.max(180, active.clientWidth - 40); // one page, safe min
+    if (prev) active.scrollBy({ left: -amount, behavior: 'smooth' });
+    if (next) active.scrollBy({ left: amount, behavior: 'smooth' });
+  }
+
+  // category button clicks (if your UI uses .category-btn)
+  const catBtn = e.target.closest('.category-btn');
+  if (catBtn) {
+    const category = catBtn.dataset.category;
+    switchCategory(category);
+  }
+});
+
+/* Make sure switching categories keeps behavior consistent */
+function switchCategory(category) {
+  // update category buttons
+  document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+  const btn = document.querySelector(`.category-btn[data-category="${category}"]`);
+  if (btn) btn.classList.add('active');
+
+  // show/hide panels
+  document.querySelectorAll('.menu-category').forEach(panel => panel.classList.remove('active'));
+  const activePanel = document.querySelector(`.menu-category[data-category="${category}"]`);
+  if (activePanel) {
+    activePanel.classList.add('active');
+
+    // apply layout so only this panel becomes horizontal when carousel mode is set
+    applyMenuLayout();
+
+    // reset scroll to start (good UX when switching)
+    activePanel.scrollTo({ left: 0, behavior: 'smooth' });
+  }
+}
+
+/* On page load: ensure there is an active category and apply layout */
+document.addEventListener('DOMContentLoaded', () => {
+  // ensure a category is active (if none, activate first)
+  if (!document.querySelector('.category-btn.active')) {
+    const firstBtn = document.querySelector('.category-btn');
+    if (firstBtn) firstBtn.classList.add('active');
+  }
+  if (!document.querySelector('.menu-category.active')) {
+    const firstPanel = document.querySelector('.menu-category');
+    if (firstPanel) firstPanel.classList.add('active');
+  }
+
+  // make UI reflect chosen/default layout
+  applyMenuLayout();
+});
+
+/* Click handler for layout buttons and carousel arrows */
+document.addEventListener('click', (e) => {
+  const layoutBtn = e.target.closest('.layout-btn');
+  if (layoutBtn) {
+    menuLayout = layoutBtn.dataset.layout || 'grid';
+    localStorage.setItem('menuLayout', menuLayout);
+    applyMenuLayout();
+    // reset scroll of active panel for clarity
+    const activePanel = getActivePanel();
+    if (activePanel) activePanel.scrollTo({ left: 0, behavior: 'smooth' });
+    return;
+  }
+
+  // arrows: scroll the currently active panel only
+  const prev = e.target.closest('.scroller-prev');
+  const next = e.target.closest('.scroller-next');
+  if (prev || next) {
+    const active = getActivePanel();
+    if (!active) return;
+    const amount = active.clientWidth - 40;
+    if (prev) active.scrollBy({ left: -amount, behavior: 'smooth' });
+    if (next) active.scrollBy({ left: amount, behavior: 'smooth' });
+  }
+});
+
+/* Replace or update your switchCategory so it applies layout to the newly-active panel */
+function switchCategory(category) {
+  // update buttons
+  document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+  const btn = document.querySelector(`.category-btn[data-category="${category}"]`);
+  if (btn) btn.classList.add('active');
+
+  // show/hide panels
+  document.querySelectorAll('.menu-category').forEach(panel => panel.classList.remove('active'));
+  const activePanel = document.querySelector(`.menu-category[data-category="${category}"]`);
+  if (activePanel) {
+    activePanel.classList.add('active');
+    // ensure layout is applied (so only this panel becomes horizontal if carousel mode)
+    applyMenuLayout();
+    // reset scroll to start
+    activePanel.scrollTo({ left: 0, behavior: 'smooth' });
+  }
+}
+
+
+// call once on load
+applyMenuLayout();
+
+// layout button clicks (delegated)
+document.addEventListener('click', (e) => {
+  // layout toggle click
+  const btn = e.target.closest('.layout-btn');
+  if (btn) {
+    menuLayout = btn.dataset.layout || 'grid';
+    localStorage.setItem('menuLayout', menuLayout);
+    applyMenuLayout();
+    // ensure active category scrolls to start (useful when switching)
+    const activePanel = document.querySelector('.menu-category.active');
+    if (activePanel) activePanel.scrollTo({left: 0, behavior: 'smooth'});
+  }
+
+  // scroll arrows
+  if (e.target.closest('.scroller-prev') || e.target.closest('.scroller-next')) {
+    const active = document.querySelector('.menu-category.active');
+    if (!active) return;
+    const amount = active.clientWidth - 40; // one "page"
+    if (e.target.closest('.scroller-prev')) {
+      active.scrollBy({left: -amount, behavior: 'smooth'});
+    } else {
+      active.scrollBy({left: amount, behavior: 'smooth'});
+    }
+  }
+});
+
+// ensure category switch resets scroll to start (so user sees first card)
+const originalSwitchCategory = window.switchCategory;
+if (typeof originalSwitchCategory === 'function') {
+  window.switchCategory = function(category) {
+    originalSwitchCategory(category);
+    // after DOM has updated, reset scroll
+    setTimeout(() => {
+      const panel = document.querySelector(`[data-category="${category}"].menu-category`);
+      if (panel) panel.scrollTo({left: 0, behavior: 'smooth'});
+    }, 80);
+  };
+}
+
 
 // Tab Navigation
 function initializeTabs() {
@@ -183,18 +379,17 @@ function enhanceMenuWithImages() {
 }
 
 function switchCategory(category) {
-    // Update category buttons
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
+    document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelector(`[data-category="${category}"]`).classList.add('active');
-
-    // Update category panels
-    document.querySelectorAll('.menu-category').forEach(panel => {
-        panel.classList.remove('active');
-    });
-    document.querySelector(`[data-category="${category}"].menu-category`).classList.add('active');
-}
+  
+    document.querySelectorAll('.menu-category').forEach(panel => panel.classList.remove('active'));
+    const activePanel = document.querySelector(`[data-category="${category}"].menu-category`);
+    if (activePanel) {
+      activePanel.classList.add('active');
+      activePanel.scrollTo({ left: 0, behavior: 'smooth' });
+    }
+  }
+  
 
 function addToCart(name, price) {
     const existingItem = cart.find(item => item.name === name);

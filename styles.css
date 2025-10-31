@@ -1201,7 +1201,97 @@ body {
         justify-content: center;
     }
 }
-
+/* ---------- HORIZONTAL / CAROUSEL LAYOUT ---------- */
+/* When .horizontal is added to a .menu-category it becomes a horizontal scroller */
+.menu-category.horizontal {
+    display: flex !important;
+    flex-wrap: nowrap;
+    gap: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 6px;
+    scroll-snap-type: x mandatory;
+    align-items: flex-start;
+  }
+  
+  /* Cards become fixed-width, horizontally scrollable */
+  .menu-category.horizontal .menu-item {
+    min-width: 260px;       /* card width — tweak as needed */
+    max-width: 260px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  
+  /* Slight visual tweak when in carousel */
+  .menu-category.horizontal .menu-item { 
+    margin-bottom: 0;
+  }
+  
+  /* hide default webkit scrollbar but keep native scrolling */
+  .menu-category.horizontal::-webkit-scrollbar { height: 8px; }
+  .menu-category.horizontal::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.07);
+    border-radius: 8px;
+  }
+  
+  /* Layout controls / arrows */
+  .menu-layout-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 10px 0 8px;
+  }
+  
+  .layout-toggle {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .layout-btn {
+    border: 1px solid #e9ecef;
+    background: white;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  
+  .layout-btn.active {
+    background: linear-gradient(135deg,#43a1c7,#356980);
+    color: white;
+    border-color: #43a1c7;
+  }
+  
+  /* arrows */
+  .carousel-arrows { display: flex; gap: 8px; }
+  .scroller-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    background: white;
+    cursor: pointer;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+  .scroller-btn:hover { transform: translateY(-2px); }
+  
+  /* hide arrows when not in carousel (JS toggles .visible) */
+  .carousel-arrows.hidden { display: none; }
+  
+  /* responsiveness: smaller card widths on small screens */
+  @media (max-width: 768px) {
+    .menu-category.horizontal .menu-item { min-width: 220px; max-width: 220px; }
+  }
+  @media (max-width: 480px) {
+    .menu-category.horizontal .menu-item { min-width: 180px; max-width: 180px; }
+  }
+  
 /* Splash Screen */
 .splash-screen {
     position: fixed;
