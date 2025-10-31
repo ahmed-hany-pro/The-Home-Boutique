@@ -99,7 +99,7 @@ body {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     position: sticky;
-    top: 100px;
+    top: 13%;
     z-index: 99;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
@@ -203,7 +203,7 @@ body {
     -webkit-overflow-scrolling: touch;
     padding: 16px 0;
     position: sticky;
-    top: 170px;
+    top: 19%;
     z-index: 98;
     background: linear-gradient(to bottom, #fdfdfd, #fcfcfd);
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
