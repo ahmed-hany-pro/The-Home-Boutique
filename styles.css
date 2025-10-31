@@ -329,7 +329,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 12px 12px 12px;
+    padding: 10px 0px 12px 12px;
     gap: 12px;
 }
 
