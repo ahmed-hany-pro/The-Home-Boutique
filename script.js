@@ -1648,3 +1648,6 @@ document.addEventListener("DOMContentLoaded", () => {
 /* IMPORTANT: call runAdjustHeightsDeferred() after you call applyMenuLayout() and after category switches.
    e.g. in your category button click handler, after applyMenuLayout(); add runAdjustHeightsDeferred();
    and in layout toggle handler, after applyMenuLayout(); add runAdjustHeightsDeferred(); */
+
+
+   

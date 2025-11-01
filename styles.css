@@ -1842,3 +1842,79 @@ body {
   align-items: center;
   justify-content: space-between;
 }
+
+/* ---------- IMAGE FILL PATCH (Grid + Carousel) ---------- */
+/* Targets: .item-image img OR direct <img class="item-src"> inside .menu-item */
+
+/* 1) Make sure image containers have a consistent aspect ratio */
+.menu-item > .item-image,
+.menu-item > img.item-src {
+  width: 100%;
+  aspect-ratio: 4 / 3;    /* change to 1/1 for squares or 16/9 if you prefer */
+  overflow: hidden;
+  background: #f1f3f5;
+  display: block;
+}
+
+/* 2) Ensure images always cover the container without distortion */
+.menu-item img,
+.menu-item .item-image img,
+.menu-item img.item-src {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;     /* fills while preserving aspect, crops if needed */
+  display: block;
+  vertical-align: middle;
+}
+
+/* 3) Carousel (horizontal) — keep cards visually equal and let body grow */
+.menu-category.horizontal .menu-item {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  /* don't force a hard height here; cards will size naturally.
+     If you want all cards to be same exact height, set min-height here (example below). */
+  /* min-height: 360px; */
+}
+
+/* make the image area a fixed portion in carousel cards (keeps alignment) */
+.menu-category.horizontal .menu-item > .item-image,
+.menu-category.horizontal .menu-item > img.item-src {
+  flex: 0 0 auto;
+  /* keep same aspect in carousel; if you prefer taller images, increase ratio */
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* body/content grows to fill remaining space & won't overflow the card */
+.menu-category.horizontal .menu-item .item-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+/* grid view: ensure cards keep consistent layout */
+.menu-category:not(.horizontal) .menu-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-category:not(.horizontal) .menu-item > .item-image,
+.menu-category:not(.horizontal) .menu-item > img.item-src {
+  /* grid uses same aspect so cards have same top image size */
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* small screens: use a square image to save vertical space */
+@media (max-width: 480px) {
+  .menu-item > .item-image,
+  .menu-item > img.item-src,
+  .menu-category.horizontal .menu-item > .item-image,
+  .menu-category.horizontal .menu-item > img.item-src {
+    aspect-ratio: 1 / 1;
+  }
+}
