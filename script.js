@@ -322,94 +322,140 @@ function initializeMenu() {
 // Inject images and restructure menu items into cards
 function enhanceMenuWithImages() {
   const CATEGORY_IMAGES = {
-    Salad:
-      "https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop",
+    Salad: "https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop",
     Soup: "https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=1200&auto=format&fit=crop",
-    "Hot Drinks":
-      "https://images.unsplash.com/photo-1498804103079-a6351b050096?q=80&w=1200&auto=format&fit=crop",
-    Dessert:
-      "https://images.unsplash.com/photo-1541782814452-d1df5a516422?q=80&w=1200&auto=format&fit=crop",
-    "Oriental Dessert":
-      "https://images.unsplash.com/photo-1606850246023-7fc9ba50f2be?q=80&w=1200&auto=format&fit=crop",
-    Pizza:
-      "https://images.unsplash.com/photo-1548365328-9f547fb09530?q=80&w=1200&auto=format&fit=crop",
-    Sandwich:
-      "https://images.unsplash.com/photo-1550317138-10000687a72b?q=80&w=1200&auto=format&fit=crop",
-    Beverages:
-      "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=1200&auto=format&fit=crop",
-    "Main Course":
-      "https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200&auto=format&fit=crop",
-    Pasta:
-      "https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=1200&auto=format&fit=crop",
-    Appetizer:
-      "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop",
+    "Hot Drinks": "https://images.unsplash.com/photo-1498804103079-a6351b050096?q=80&w=1200&auto=format&fit=crop",
+    Dessert: "https://images.unsplash.com/photo-1541782814452-d1df5a516422?q=80&w=1200&auto=format&fit=crop",
+    "Oriental Dessert": "https://images.unsplash.com/photo-1606850246023-7fc9ba50f2be?q=80&w=1200&auto=format&fit=crop",
+    Pizza: "https://images.unsplash.com/photo-1548365328-9f547fb09530?q=80&w=1200&auto=format&fit=crop",
+    Sandwich: "https://images.unsplash.com/photo-1550317138-10000687a72b?q=80&w=1200&auto=format&fit=crop",
+    Beverages: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=1200&auto=format&fit=crop",
+    "Main Course": "https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200&auto=format&fit=crop",
+    Pasta: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=1200&auto=format&fit=crop",
+    Appetizer: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop",
   };
 
-  // Optional: map specific items to images (add real paths as you get them)
   const ITEM_IMAGES = {
     // 'Greek': 'images/salad-greek.jpg',
-    // 'Margherita': 'images/pizza-margherita.jpg',
   };
+
+  function getImageUrlForItem(item, itemName, category) {
+    // 1) data-image attribute on the .menu-item (highest priority)
+    if (item.dataset && item.dataset.image) return item.dataset.image.trim();
+
+    // 2) inline <img> that is meant to be the source (detect common classes/attributes)
+    const inlineImg = item.querySelector('img[data-item-image], img.item-src, img.item-image-custom');
+    if (inlineImg && inlineImg.src) return inlineImg.src;
+
+    // 3) item-specific mapping (JS)
+    if (ITEM_IMAGES[itemName]) return ITEM_IMAGES[itemName];
+
+    // 4) fallback to category image
+    if (category && CATEGORY_IMAGES[category]) return CATEGORY_IMAGES[category];
+
+    return null;
+  }
 
   const menuItems = document.querySelectorAll(".menu-item");
   menuItems.forEach((item) => {
-    // Skip if already enhanced
-    if (item.querySelector(".item-image")) return;
-
     const categoryWrapper = item.closest(".menu-category");
-    const category = categoryWrapper
-      ? categoryWrapper.getAttribute("data-category")
-      : "";
+    const category = categoryWrapper ? categoryWrapper.getAttribute("data-category") : "";
     const nameElement = item.querySelector(".item-info h4");
     const itemName = nameElement ? nameElement.textContent.trim() : "";
 
-    const imageUrl =
-      ITEM_IMAGES[itemName] ||
-      CATEGORY_IMAGES[category] ||
-      "https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=1200&auto=format&fit=crop";
+    const inlineImg = item.querySelector('img[data-item-image], img.item-src, img.item-image-custom');
 
-    // Create image container
-    const imageDiv = document.createElement("div");
-    imageDiv.className = "item-image";
-    const img = document.createElement("img");
-    img.src = imageUrl;
-    img.alt = itemName || category || "Menu item";
-    imageDiv.appendChild(img);
+    // Determine desired source (null if none)
+    const desiredSrc = getImageUrlForItem(item, itemName, category);
 
-    // Create body and footer containers
-    const bodyDiv = document.createElement("div");
-    bodyDiv.className = "item-body";
-
-    const footerDiv = document.createElement("div");
-    footerDiv.className = "item-footer";
-
-    // Move existing nodes
-    const info = item.querySelector(".item-info");
-    const price = item.querySelector(".item-price");
-    const addBtn = item.querySelector(".add-btn");
-
-    if (info) {
-      // convert existing title to mobile-friendly truncated title
-      const title = info.querySelector("h4");
-      if (title) title.classList.add("item-title");
-      // add a subtle category subtitle under the title
-      if (title) {
-        const subtitle = document.createElement("div");
-        subtitle.className = "item-subtitle";
-        subtitle.textContent = category || "";
-        title.insertAdjacentElement("afterend", subtitle);
-      }
-      bodyDiv.appendChild(info);
+    // Ensure one .item-image wrapper exists
+    let imageDiv = item.querySelector(".item-image");
+    if (!imageDiv) {
+      imageDiv = document.createElement("div");
+      imageDiv.className = "item-image";
+      // prepend immediately so moves below can append/move images into it
+      item.prepend(imageDiv);
     }
-    if (price) footerDiv.appendChild(price);
-    if (addBtn) footerDiv.appendChild(addBtn);
 
-    // Rebuild card
-    item.prepend(imageDiv);
-    item.appendChild(bodyDiv);
-    item.appendChild(footerDiv);
+    // If there's an inline image outside .item-image, move it into the wrapper and use it
+    if (inlineImg && !imageDiv.contains(inlineImg)) {
+      // remove duplicate images inside wrapper first to avoid duplicates
+      imageDiv.querySelectorAll("img").forEach((n) => n.remove());
+      imageDiv.appendChild(inlineImg);
+    }
+
+    // Now choose/create the canonical <img> inside imageDiv
+    let primaryImg = imageDiv.querySelector("img");
+    if (!primaryImg) {
+      primaryImg = document.createElement("img");
+      imageDiv.appendChild(primaryImg);
+    }
+
+    // Set src: prefer data-image/inline, then item mapping, then category; if null, leave src as-is
+    if (desiredSrc) {
+      if (primaryImg.src !== desiredSrc) primaryImg.src = desiredSrc;
+    } else if (!primaryImg.src) {
+      // if we truly have no image, remove the tag to avoid empty placeholders
+      primaryImg.remove();
+      primaryImg = null;
+    }
+
+    // Ensure alt + lazy loading
+    if (primaryImg) {
+      if (!primaryImg.alt || primaryImg.alt.trim() === "") {
+        primaryImg.alt = itemName || category || "Menu item";
+      }
+      primaryImg.loading = "lazy";
+    }
+
+    // Remove any stray <img> elements that are direct children of .menu-item but NOT inside .item-image
+    item.querySelectorAll(':scope > img').forEach((stray) => {
+      // if there's already an image inside .item-image, remove stray; otherwise move it in
+      if (imageDiv && imageDiv.contains(stray) === false) {
+        imageDiv.appendChild(stray);
+      }
+    });
+
+    // Remove extra <img> inside imageDiv beyond the first (dedupe)
+    const imgsInside = imageDiv.querySelectorAll("img");
+    if (imgsInside.length > 1) {
+      imgsInside.forEach((imgEl, idx) => {
+        if (idx > 0) imgEl.remove();
+      });
+    }
+
+    // Rebuild body/footer only if not present (keeps your original nodes if already structured)
+    if (!item.querySelector(".item-body")) {
+      const bodyDiv = document.createElement("div");
+      bodyDiv.className = "item-body";
+
+      const footerDiv = document.createElement("div");
+      footerDiv.className = "item-footer";
+
+      const info = item.querySelector(".item-info");
+      const price = item.querySelector(".item-price");
+      const addBtn = item.querySelector(".add-btn");
+
+      if (info) {
+        const title = info.querySelector("h4");
+        if (title) title.classList.add("item-title");
+        if (title) {
+          const subtitle = document.createElement("div");
+          subtitle.className = "item-subtitle";
+          subtitle.textContent = category || "";
+          title.insertAdjacentElement("afterend", subtitle);
+        }
+        bodyDiv.appendChild(info);
+      }
+      if (price) footerDiv.appendChild(price);
+      if (addBtn) footerDiv.appendChild(addBtn);
+
+      item.appendChild(bodyDiv);
+      item.appendChild(footerDiv);
+    }
   });
 }
+
 
 function switchCategory(category) {
   document
