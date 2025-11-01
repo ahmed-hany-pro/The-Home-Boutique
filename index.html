@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Home Boutique - Hotel Services</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body>
     <!-- Splash Screen -->
     <div id="splashScreen" class="splash-screen">
@@ -37,12 +41,12 @@
     <div class="app-container">
         <!-- Header -->
         <header class="app-header">
-          <div class="hotel-logo">
-              <div class="logo-circle">
-                  <img src="logo.png" alt="The Home Boutique Logo" class="logo-image">
-                  <div class="logo-crown">♔</div>
-              </div>
-          </div>
+            <div class="hotel-logo">
+                <div class="logo-circle">
+                    <img src="logo.png" alt="The Home Boutique Logo" class="logo-image">
+                    <div class="logo-crown">♔</div>
+                </div>
+            </div>
             <div class="hotel-info">
                 <h1 class="hotel-name">The Home Boutique</h1>
                 <p class="hotel-subtitle">hotel pyramids inn</p>
@@ -76,9 +80,16 @@
                 <div class="panel-header">
                     <h2><i class="fas fa-utensils"></i> Order Food</h2>
                 </div>
-                
+
                 <div class="menu-section">
                     <h3>Menu</h3>
+                    <div class="menu-layout-controls">
+                        <div class="layout-toggle">
+                            <button class="layout-btn active" data-layout="grid" title="Grid">☷</button>
+                            <button class="layout-btn" data-layout="carousel" title="Carousel">⇄</button>
+                        </div>
+                    </div>
+
                     <div class="menu-categories">
                         <button class="category-btn" data-category="Appetizer">Appetizer</button>
                         <button class="category-btn" data-category="Soup">Soup</button>
@@ -92,7 +103,7 @@
                         <button class="category-btn" data-category="Hot Drinks">Hot Drinks</button>
                         <button class="category-btn" data-category="Beverages">Beverages</button>
                     </div>
-                    
+
                     <div class="menu-items">
 
                         <!-- Salad -->
@@ -100,7 +111,8 @@
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Greek</h4>
-                                    <p>Lettuce, tomatoes, cucumber, sweet peppers, onions, feta cheese & vinaigrette sauce.</p>
+                                    <p>Lettuce, tomatoes, cucumber, sweet peppers, onions, feta cheese & vinaigrette
+                                        sauce.</p>
                                 </div>
                                 <div class="item-price">250 L.E</div>
                                 <button class="add-btn" data-name="Greek" data-price="250">
@@ -110,7 +122,8 @@
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Fattoush</h4>
-                                    <p>Lettuce, tomatoes, cucumber, sweet peppers, red radish, onions, toasted lebanese bread.</p>
+                                    <p>Lettuce, tomatoes, cucumber, sweet peppers, red radish, onions, toasted lebanese
+                                        bread.</p>
                                 </div>
                                 <div class="item-price">250 L.E</div>
                                 <button class="add-btn" data-name="Fattoush" data-price="250">
@@ -120,7 +133,8 @@
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Roasted Beef</h4>
-                                    <p>Minced meat, arugula, lettuce, mushrooms, onions, cherry tomatoes & red radish.</p>
+                                    <p>Minced meat, arugula, lettuce, mushrooms, onions, cherry tomatoes & red radish.
+                                    </p>
                                 </div>
                                 <div class="item-price">370 L.E</div>
                                 <button class="add-btn" data-name="Roasted Beef" data-price="370">
@@ -150,7 +164,8 @@
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Shrimp Avocado</h4>
-                                    <p>Arugula with grilled shrimp, avocado & cherry tomatoes with vinaigrette sauce.</p>
+                                    <p>Arugula with grilled shrimp, avocado & cherry tomatoes with vinaigrette sauce.
+                                    </p>
                                 </div>
                                 <div class="item-price">400 L.E</div>
                                 <button class="add-btn" data-name="Shrimp Avocado" data-price="400">
@@ -158,7 +173,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
 
                         <!-- Soup -->
                         <div class="menu-category" data-category="Soup">
@@ -223,8 +238,8 @@
                                 </button>
                             </div>
                         </div>
-                        
-                        
+
+
                         <!-- Hot Drinks -->
                         <div class="menu-category" data-category="Hot Drinks">
                             <div class="menu-item">
@@ -408,7 +423,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Dessert -->
                         <div class="menu-category" data-category="Dessert">
                             <div class="menu-item">
@@ -421,7 +436,7 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            
+
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Cheesecake Caramel</h4>
@@ -512,11 +527,11 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                          
+
                         </div>
 
-                        
-                        
+
+
                         <!-- Oriental Dessert -->
                         <div class="menu-category" data-category="Oriental Dessert">
                             <div class="menu-item">
@@ -529,7 +544,7 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            
+
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Umm Ali</h4>
@@ -560,10 +575,10 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            
+
                         </div>
-                        
-                        
+
+
                         <!-- Pizza -->
                         <div class="menu-category" data-category="Pizza">
                             <div class="menu-item">
@@ -576,11 +591,12 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            
+
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Shrimp & Mushroom</h4>
-                                    <p>Mozzarella cheese, fresh thyme, fresh mushroom, shrimp, arugula, tomato sauce.</p>
+                                    <p>Mozzarella cheese, fresh thyme, fresh mushroom, shrimp, arugula, tomato sauce.
+                                    </p>
                                 </div>
                                 <div class="item-price">670 L.E</div>
                                 <button class="add-btn" data-name="Shrimp & Mushroom" data-price="670">
@@ -648,8 +664,8 @@
                                 </button>
                             </div>
                         </div>
-                        
-                        
+
+
                         <!-- Sandwich -->
                         <div class="menu-category" data-category="Sandwich">
                             <div class="menu-item">
@@ -662,7 +678,7 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            
+
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Swiss Burger</h4>
@@ -736,7 +752,8 @@
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Kofta</h4>
-                                    <p>Grilled minced meat marinated with Egyptian spices, prepared with love & care.</p>
+                                    <p>Grilled minced meat marinated with Egyptian spices, prepared with love & care.
+                                    </p>
                                 </div>
                                 <div class="item-price">500 L.E</div>
                                 <button class="add-btn" data-name="Kofta" data-price="500">
@@ -754,8 +771,8 @@
                                 </button>
                             </div>
                         </div>
-                        
-                        
+
+
                         <!-- Appetizer -->
                         <div class="menu-category" data-category="Appetizer">
                             <div class="menu-item">
@@ -768,7 +785,7 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            
+
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Chilli Cheese Fries</h4>
@@ -812,7 +829,8 @@
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Nachos</h4>
-                                    <p>Corn tortilla bread, chili cheese, minced meat, red beans, jalapeño, mix cheese.</p>
+                                    <p>Corn tortilla bread, chili cheese, minced meat, red beans, jalapeño, mix cheese.
+                                    </p>
                                 </div>
                                 <div class="item-price">350 L.E</div>
                                 <button class="add-btn" data-name="Nachos" data-price="350">
@@ -829,10 +847,10 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                         
+
                         </div>
-                        
-                        
+
+
                         <!-- Beverages -->
                         <div class="menu-category" data-category="Beverages">
                             <div class="menu-item">
@@ -845,7 +863,7 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            
+
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Iced Coffee</h4>
@@ -978,8 +996,8 @@
                             </div>
                         </div>
 
-                        
-                        
+
+
                         <!-- Main Course -->
                         <div class="menu-category" data-category="Main Course">
                             <div class="menu-item">
@@ -992,7 +1010,7 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            
+
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Kofta</h4>
@@ -1036,7 +1054,8 @@
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Grape Leaves Casserole</h4>
-                                    <p>Roasted beef and grape leaves stuffed with flavored rice topped with tomato sauce.</p>
+                                    <p>Roasted beef and grape leaves stuffed with flavored rice topped with tomato
+                                        sauce.</p>
                                 </div>
                                 <div class="item-price">450 L.E</div>
                                 <button class="add-btn" data-name="Grape Leaves Casserole" data-price="450">
@@ -1063,12 +1082,12 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                           
+
                         </div>
 
 
-                        
-                        
+
+
                         <!-- Pasta -->
                         <div class="menu-category" data-category="Pasta">
                             <div class="menu-item">
@@ -1081,7 +1100,7 @@
                                     <i class="fas fa-plus"></i>
                                 </button>
                             </div>
-                            
+
                             <div class="menu-item">
                                 <div class="item-info">
                                     <h4>Chicken Jalapeno</h4>
@@ -1165,29 +1184,29 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="cart-section">
                     <h3>Your Order</h3>
-                    
+
                     <div class="form-group">
                         <label for="customerName">Your Name *</label>
                         <input type="text" id="customerName" required placeholder="Enter your name">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="roomNumber">Room Number *</label>
                         <input type="text" id="roomNumber" required placeholder="Enter your room number">
                     </div>
-                    
+
                     <div class="cart-items" id="cartItems">
                         <p class="empty-cart">Your cart is empty</p>
                     </div>
                     <div class="cart-total">
                         <strong>Total: <span id="totalPrice">0.00</span> L.E</strong>
                     </div>
-                    
+
                     <button class="order-btn" id="placeOrderBtn" disabled>
-                        <i class="fas fa-utensils"></i>  Order Now 
+                        <i class="fas fa-utensils"></i> Order Now
                     </button>
                 </div>
             </div>
@@ -1197,33 +1216,36 @@
                 <div class="panel-header">
                     <h2><i class="fas fa-map-marked-alt"></i> Tour Organization</h2>
                 </div>
-                
+
                 <form class="service-form" id="tourForm">
                     <div class="form-group">
                         <label for="tourCustomerName">Your Name *</label>
-                        <input type="text" id="tourCustomerName" name="tourCustomerName" required placeholder="Enter your name">
+                        <input type="text" id="tourCustomerName" name="tourCustomerName" required
+                            placeholder="Enter your name">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="tourRoomNumber">Room Number *</label>
-                        <input type="text" id="tourRoomNumber" name="tourRoomNumber" required placeholder="Enter your room number">
+                        <input type="text" id="tourRoomNumber" name="tourRoomNumber" required
+                            placeholder="Enter your room number">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="tourDestination">Destination</label>
-                        <input type="text" id="tourDestination" name="tourDestination" required placeholder="Enter destination">
+                        <input type="text" id="tourDestination" name="tourDestination" required
+                            placeholder="Enter destination">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="tourDate">Date</label>
                         <input type="date" id="tourDate" name="tourDate" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="tourTime">Time</label>
                         <input type="time" id="tourTime" name="tourTime" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="tourDuration">Duration</label>
                         <select id="tourDuration" name="tourDuration" required>
@@ -1235,12 +1257,13 @@
                             <option value="Full day">Full day</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="tourParticipants">Number of Participants</label>
-                        <input type="number" id="tourParticipants" name="tourParticipants" min="1" required placeholder="Number of people">
+                        <input type="number" id="tourParticipants" name="tourParticipants" min="1" required
+                            placeholder="Number of people">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="tourNeedGuide" name="tourNeedGuide">
@@ -1251,14 +1274,16 @@
 
                     <div class="form-group" id="tourGuideLanguageGroup" style="display: none;">
                         <label for="tourGuideLanguage">Preferred Guide Language</label>
-                        <input type="text" id="tourGuideLanguage" name="tourGuideLanguage" placeholder="e.g., English, Arabic, French...">
+                        <input type="text" id="tourGuideLanguage" name="tourGuideLanguage"
+                            placeholder="e.g., English, Arabic, French...">
                     </div>
 
                     <div class="form-group">
                         <label for="tourSpecialRequests">Special Requests</label>
-                        <textarea id="tourSpecialRequests" name="tourSpecialRequests" placeholder="Any special requirements or requests"></textarea>
+                        <textarea id="tourSpecialRequests" name="tourSpecialRequests"
+                            placeholder="Any special requirements or requests"></textarea>
                     </div>
-                    
+
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-map-marked-alt"></i> Send Tour Request
                     </button>
@@ -1270,18 +1295,20 @@
                 <div class="panel-header">
                     <h2><i class="fas fa-car"></i> Transportation</h2>
                 </div>
-                
+
                 <form class="service-form" id="transportForm">
                     <div class="form-group">
                         <label for="transportCustomerName">Your Name *</label>
-                        <input type="text" id="transportCustomerName" name="transportCustomerName" required placeholder="Enter your name">
+                        <input type="text" id="transportCustomerName" name="transportCustomerName" required
+                            placeholder="Enter your name">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="transportRoomNumber">Room Number *</label>
-                        <input type="text" id="transportRoomNumber" name="transportRoomNumber" required placeholder="Enter your room number">
+                        <input type="text" id="transportRoomNumber" name="transportRoomNumber" required
+                            placeholder="Enter your room number">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="transportType">Transport Type</label>
                         <select id="transportType" name="transportType" required>
@@ -1292,37 +1319,40 @@
                             <option value="Van">Van</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="pickupLocation">Pickup Location</label>
-                        <input type="text" id="pickupLocation" name="pickupLocation" required placeholder="Enter pickup address">
+                        <input type="text" id="pickupLocation" name="pickupLocation" required
+                            placeholder="Enter pickup address">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="destination">Destination</label>
                         <input type="text" id="destination" name="destination" required placeholder="Enter destination">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="transportDate">Date</label>
                         <input type="date" id="transportDate" name="transportDate" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="transportTime">Time</label>
                         <input type="time" id="transportTime" name="transportTime" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="passengers">Number of Passengers</label>
-                        <input type="number" id="passengers" name="passengers" min="1" required placeholder="Number of passengers">
+                        <input type="number" id="passengers" name="passengers" min="1" required
+                            placeholder="Number of passengers">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="transportSpecialRequests">Special Requests</label>
-                        <textarea id="transportSpecialRequests" name="transportSpecialRequests" placeholder="Any special requirements"></textarea>
+                        <textarea id="transportSpecialRequests" name="transportSpecialRequests"
+                            placeholder="Any special requirements"></textarea>
                     </div>
-                    
+
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-car"></i> Send Transport Request
                     </button>
@@ -1334,18 +1364,20 @@
                 <div class="panel-header">
                     <h2><i class="fas fa-home"></i> Housekeeping</h2>
                 </div>
-                
+
                 <form class="service-form" id="housekeepingForm">
                     <div class="form-group">
                         <label for="housekeepingCustomerName">Your Name *</label>
-                        <input type="text" id="housekeepingCustomerName" name="housekeepingCustomerName" required placeholder="Enter your name">
+                        <input type="text" id="housekeepingCustomerName" name="housekeepingCustomerName" required
+                            placeholder="Enter your name">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="housekeepingRoomNumber">Room Number *</label>
-                        <input type="text" id="housekeepingRoomNumber" name="housekeepingRoomNumber" required placeholder="Enter your room number">
+                        <input type="text" id="housekeepingRoomNumber" name="housekeepingRoomNumber" required
+                            placeholder="Enter your room number">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="immediateService" name="immediateService">
@@ -1353,23 +1385,24 @@
                             Request immediate housekeeping
                         </label>
                     </div>
-                    
+
                     <div class="form-group" id="dateTimeFields">
                         <label for="cleaningDate">Preferred Date</label>
                         <input type="date" id="cleaningDate" name="cleaningDate" required>
                     </div>
-                    
+
                     <div class="form-group" id="timeField">
                         <label for="cleaningTime">Preferred Time</label>
                         <input type="time" id="cleaningTime" name="cleaningTime" required>
                     </div>
-                    
-                    
+
+
                     <div class="form-group">
                         <label for="housekeepingSpecialRequests">Special Requests</label>
-                        <textarea id="housekeepingSpecialRequests" name="housekeepingSpecialRequests" placeholder="Any special requirements or areas to focus on"></textarea>
+                        <textarea id="housekeepingSpecialRequests" name="housekeepingSpecialRequests"
+                            placeholder="Any special requirements or areas to focus on"></textarea>
                     </div>
-                    
+
                     <button type="submit" class="submit-btn">
                         <i class="fas fa-home"></i> Send Housekeeping Request
                     </button>
@@ -1399,7 +1432,7 @@
             </div>
             <div class="modal-footer">
                 <button class="confirm-btn" id="confirmSendBtn">
-                    <i class="fas fa-check"></i> Confirm 
+                    <i class="fas fa-check"></i> Confirm
                 </button>
                 <button class="cancel-btn" onclick="closeConfirmationModal()">
                     <i class="fas fa-times"></i> Cancel
@@ -1411,10 +1444,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
         // Initialize EmailJS
-        (function() {
+        (function () {
             emailjs.init("UKlLcoE6rx7V_Ku-w"); // Replace with your EmailJS public key
         })();
     </script>
     <script src="script.js"></script>
 </body>
+
 </html>
