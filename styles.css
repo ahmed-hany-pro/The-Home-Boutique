@@ -1,3 +1,7 @@
+/* ==========================================
+   HOTEL SERVICES APP - STYLES
+   ========================================== */
+
 /* Reset and Base Styles */
 * {
   margin: 0;
@@ -22,7 +26,9 @@ body {
   position: relative;
 }
 
-/* Header */
+/* ==========================================
+   HEADER
+   ========================================== */
 .app-header {
   background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   color: white;
@@ -54,12 +60,10 @@ body {
 }
 
 .logo-image {
-  width: 6000px;
-  height: 6000px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   border-radius: 50%;
-  max-width: 100%;
-  max-height: 100%;
 }
 
 .logo-crown {
@@ -91,7 +95,9 @@ body {
   text-transform: uppercase;
 }
 
-/* Tab Navigation */
+/* ==========================================
+   TAB NAVIGATION
+   ========================================== */
 .tab-navigation {
   display: flex;
   background: white;
@@ -99,7 +105,7 @@ body {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   position: sticky;
-  top: 13%;
+  top: 100px;
   z-index: 99;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
@@ -119,7 +125,6 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  position: relative;
 }
 
 .tab-btn i {
@@ -143,11 +148,9 @@ body {
   color: #2c3e50;
 }
 
-.tab-btn:hover i {
-  transform: scale(1.05);
-}
-
-/* Tab Content */
+/* ==========================================
+   TAB CONTENT
+   ========================================== */
 .tab-content {
   padding: 30px 20px;
   min-height: calc(100vh - 200px);
@@ -156,6 +159,7 @@ body {
 
 .tab-panel {
   display: none;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .tab-panel.active {
@@ -181,20 +185,57 @@ body {
   font-size: 1.5rem;
 }
 
-/* Menu Section */
+/* ==========================================
+   MENU SECTION
+   ========================================== */
 .menu-section {
   margin-bottom: 30px;
+  text-align: center;
 }
 
 .menu-section h3 {
   font-family: "Playfair Display", serif;
   color: #2c3e50;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 1.4rem;
   font-weight: 600;
-  text-align: center;
 }
 
+/* Layout Controls */
+.menu-layout-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.layout-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.layout-btn {
+  border: 1px solid #e9ecef;
+  background: white;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.layout-btn.active {
+  background: linear-gradient(135deg, #43a1c7, #356980);
+  color: white;
+  border-color: #43a1c7;
+}
+
+.layout-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Category Buttons */
 .menu-categories {
   display: flex;
   gap: 12px;
@@ -203,7 +244,7 @@ body {
   -webkit-overflow-scrolling: touch;
   padding: 16px 0;
   position: sticky;
-  top: 21%;
+  top: 180px;
   z-index: 98;
   background: linear-gradient(to bottom, #fdfdfd, #fcfcfd);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -236,6 +277,9 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* ==========================================
+   MENU ITEMS - GRID LAYOUT (Default)
+   ========================================== */
 .menu-items {
   margin-bottom: 25px;
 }
@@ -250,11 +294,10 @@ body {
   gap: 16px;
 }
 
+/* Menu Item Cards */
 .menu-item {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  padding: 0;
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
@@ -269,7 +312,6 @@ body {
   border-color: #43a1c7;
 }
 
-/* Menu card content */
 .item-image {
   width: 100%;
   aspect-ratio: 4 / 3;
@@ -286,7 +328,7 @@ body {
 }
 
 .item-body {
-  padding: 12px 12px 6px 12px;
+  padding: 12px;
   flex: 1;
 }
 
@@ -296,15 +338,13 @@ body {
   font-weight: 700;
   margin-bottom: 6px;
   font-family: "Playfair Display", serif;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .item-subtitle {
   color: #8a94a6;
   font-size: 0.8rem;
   font-weight: 500;
+  margin-bottom: 8px;
 }
 
 .item-info {
@@ -329,7 +369,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px 12px 12px;
+  padding: 10px 12px;
   gap: 12px;
 }
 
@@ -360,7 +400,53 @@ body {
   box-shadow: 0 6px 20px rgba(67, 161, 199, 0.4);
 }
 
-/* Cart Section */
+/* ==========================================
+   MENU ITEMS - CAROUSEL LAYOUT
+   ========================================== */
+.menu-category.horizontal {
+  display: flex !important;
+  flex-wrap: nowrap;
+  gap: 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 6px;
+  scroll-snap-type: x mandatory;
+  align-items: stretch;
+}
+
+.menu-category.horizontal .menu-item {
+  min-width: 260px;
+  max-width: 260px;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  height: auto;
+}
+
+.menu-category.horizontal .item-image {
+  flex: 0 0 auto;
+}
+
+.menu-category.horizontal .item-body {
+  display: block;
+  overflow: visible;
+}
+
+.menu-category.horizontal .item-footer {
+  flex: 0 0 auto;
+}
+
+.menu-category.horizontal::-webkit-scrollbar {
+  height: 8px;
+}
+
+.menu-category.horizontal::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.07);
+  border-radius: 8px;
+}
+
+/* ==========================================
+   CART SECTION
+   ========================================== */
 .cart-section {
   background: white;
   border-radius: 20px;
@@ -458,7 +544,9 @@ body {
   padding: 20px;
 }
 
-/* Forms */
+/* ==========================================
+   FORMS
+   ========================================== */
 .service-form {
   background: white;
   border-radius: 20px;
@@ -467,72 +555,6 @@ body {
   border: 1px solid #f8f9fa;
   max-width: 600px;
   margin: 0 auto;
-}
-
-/* Custom Checkbox Styling */
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-weight: 500;
-  color: #2c3e50;
-  margin-bottom: 0;
-  padding: 15px 20px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border-radius: 12px;
-  border: 2px solid #e9ecef;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-/* Hover effect */
-.checkbox-label:hover {
-  border-color: #43a1c7;
-  background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(67, 161, 199, 0.2);
-}
-
-/* Hide default checkbox */
-.checkbox-label input[type="checkbox"] {
-  display: none;
-}
-
-/* Custom box */
-.checkmark {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #6c757d;
-  border-radius: 4px;
-  margin-right: 12px;
-  position: relative;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-}
-
-/* Checked state — active look without checkmark */
-.checkbox-label input[type="checkbox"]:checked + .checkmark {
-  background: linear-gradient(135deg, #43a1c7 0%, #356980 100%);
-  border-color: #43a1c7;
-}
-
-/* Remove checkmark completely */
-.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
-  content: none;
-}
-
-/* Change text color when checked */
-.checkbox-label input[type="checkbox"]:checked ~ span:not(.checkmark) {
-  color: #43a1c7;
-  font-weight: 600;
-}
-
-/* Keep hover-like style after checked */
-.checkbox-label:has(input[type="checkbox"]:checked) {
-  border-color: #43a1c7;
-  background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
-  box-shadow: 0 4px 15px rgba(67, 161, 199, 0.2);
-  transform: translateY(-2px);
 }
 
 .form-group {
@@ -575,7 +597,61 @@ body {
   min-height: 100px;
 }
 
-/* Buttons */
+/* Custom Checkbox */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  color: #2c3e50;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.checkbox-label:hover {
+  border-color: #43a1c7;
+  background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(67, 161, 199, 0.2);
+}
+
+.checkbox-label input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #6c757d;
+  border-radius: 4px;
+  margin-right: 12px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
+  background: linear-gradient(135deg, #43a1c7 0%, #356980 100%);
+  border-color: #43a1c7;
+}
+
+.checkbox-label input[type="checkbox"]:checked ~ span:not(.checkmark) {
+  color: #43a1c7;
+  font-weight: 600;
+}
+
+.checkbox-label:has(input[type="checkbox"]:checked) {
+  border-color: #43a1c7;
+  background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
+  box-shadow: 0 4px 15px rgba(67, 161, 199, 0.2);
+  transform: translateY(-2px);
+}
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
 .order-btn,
 .submit-btn {
   width: 100%;
@@ -610,139 +686,9 @@ body {
   box-shadow: none;
 }
 
-.order-btn:disabled:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .tab-btn {
-    padding: 12px 8px;
-    font-size: 0.75rem;
-  }
-
-  .tab-btn i {
-    font-size: 1rem;
-  }
-
-  .tab-content {
-    padding: 15px;
-  }
-
-  .menu-category.active {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  }
-
-  .item-name {
-    font-size: 1rem;
-  }
-
-  .item-price {
-    font-size: 1rem;
-  }
-
-  .add-btn {
-    width: 38px;
-    height: 38px;
-  }
-
-  .cart-section {
-    padding: 15px;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    padding: 12px;
-    font-size: 0.9rem;
-  }
-
-  .order-btn,
-  .submit-btn {
-    padding: 15px;
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .app-header h1 {
-    font-size: 1.5rem;
-  }
-
-  .tab-btn {
-    padding: 12px 8px;
-    font-size: 0.75rem;
-  }
-
-  .tab-btn i {
-    font-size: 1rem;
-  }
-
-  .tab-content {
-    padding: 15px;
-  }
-
-  .menu-category.active {
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  .item-image {
-    aspect-ratio: 1 / 1;
-  }
-
-  .item-info h4 {
-    font-size: 0.95rem;
-  }
-
-  .item-info p {
-    font-size: 0.8rem;
-  }
-
-  .item-price {
-    font-size: 1rem;
-  }
-
-  .add-btn {
-    width: 34px;
-    height: 34px;
-  }
-
-  .service-form {
-    padding: 20px;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    padding: 10px 12px;
-    font-size: 0.95rem;
-  }
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.tab-panel.active {
-  animation: fadeIn 0.3s ease-out;
-}
-
-/* Loading State */
-.loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-/* Fixed Notification System */
+/* ==========================================
+   NOTIFICATION SYSTEM
+   ========================================== */
 .notification-container {
   position: fixed;
   top: 120px;
@@ -764,25 +710,7 @@ body {
   gap: 12px;
   animation: slideInRight 0.3s ease-out;
   pointer-events: auto;
-  font-family: "Inter", sans-serif;
   font-weight: 500;
-  position: relative;
-  overflow: hidden;
-}
-
-.notification::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(248, 249, 250, 0.9) 100%
-  );
-  z-index: -1;
 }
 
 .notification.success {
@@ -790,26 +718,14 @@ body {
   color: #155724;
 }
 
-.notification.success .notification-icon {
-  color: #28a745;
-}
-
 .notification.error {
   border-left-color: #dc3545;
   color: #721c24;
 }
 
-.notification.error .notification-icon {
-  color: #dc3545;
-}
-
 .notification.info {
   border-left-color: #43a1c7;
   color: #2c3e50;
-}
-
-.notification.info .notification-icon {
-  color: #43a1c7;
 }
 
 .notification-icon {
@@ -833,7 +749,6 @@ body {
   border-radius: 50%;
   transition: background-color 0.3s ease;
   opacity: 0.7;
-  flex-shrink: 0;
 }
 
 .notification-close:hover {
@@ -841,77 +756,13 @@ body {
   opacity: 1;
 }
 
-/* Notification Animations */
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideOutRight {
-  from {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-}
-
 .notification.removing {
   animation: slideOutRight 0.3s ease-in forwards;
 }
 
-/* Mobile Responsive for Notifications */
-@media (max-width: 480px) {
-  .notification-container {
-    top: 110px;
-    right: 10px;
-    left: 10px;
-    max-width: none;
-  }
-
-  .notification {
-    padding: 12px 15px;
-    font-size: 0.9rem;
-  }
-
-  .notification-icon {
-    font-size: 1.1rem;
-  }
-}
-
-/* Success Message */
-.success-message {
-  background: #d4edda;
-  color: #155724;
-  padding: 15px;
-  border-radius: 10px;
-  margin: 15px 0;
-  border: 1px solid #c3e6cb;
-  text-align: center;
-  font-weight: 500;
-}
-
-/* Error Message */
-.error-message {
-  background: #f8d7da;
-  color: #721c24;
-  padding: 15px;
-  border-radius: 10px;
-  margin: 15px 0;
-  border: 1px solid #f5c6cb;
-  text-align: center;
-  font-weight: 500;
-}
-
-/* Confirmation Modal */
+/* ==========================================
+   MODAL
+   ========================================== */
 .modal {
   display: none;
   position: fixed;
@@ -954,11 +805,6 @@ body {
   font-size: 1.4rem;
   font-weight: 600;
   font-family: "Playfair Display", serif;
-}
-
-.modal-header h3 i {
-  margin-right: 12px;
-  color: #43a1c7;
 }
 
 .close-btn {
@@ -1004,7 +850,6 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: "Inter", sans-serif;
 }
 
 .cancel-btn {
@@ -1014,7 +859,6 @@ body {
 }
 
 .cancel-btn:hover {
-  background: #e50000;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
 }
@@ -1030,6 +874,7 @@ body {
   box-shadow: 0 6px 20px rgba(67, 161, 199, 0.4);
 }
 
+/* Confirmation Content */
 .confirmation-content {
   line-height: 1.7;
 }
@@ -1088,230 +933,9 @@ body {
   font-family: "Lora", serif;
 }
 
-/* Modal Animations */
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Mobile Responsive */
-@media (max-width: 480px) {
-  .hotel-name {
-    font-size: 1.4rem;
-  }
-
-  .hotel-subtitle {
-    font-size: 0.75rem;
-  }
-
-  .logo-circle {
-    width: 50px;
-    height: 50px;
-  }
-
-  .logo-monogram {
-    font-size: 1.2rem;
-  }
-
-  .tab-btn {
-    padding: 15px 8px;
-    font-size: 0.75rem;
-  }
-
-  .tab-btn i {
-    font-size: 1.1rem;
-  }
-
-  .tab-content {
-    padding: 20px 15px;
-  }
-
-  .panel-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .menu-item {
-    padding: 0px;
-  }
-
-  .item-info h4 {
-    font-size: 1rem;
-  }
-
-  .item-info p {
-    font-size: 0.85rem;
-  }
-
-  .item-price {
-    font-size: 1.1rem;
-    margin: 0 15px;
-  }
-
-  .add-btn {
-    width: 40px;
-    height: 40px;
-  }
-
-  .service-form {
-    padding: 25px 20px;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    padding: 12px 15px;
-    font-size: 0.95rem;
-  }
-
-  .cart-section {
-    position: sticky;
-    top: 160px;
-    margin-top: 15px;
-    padding: 20px;
-  }
-
-  .modal-content {
-    width: 95%;
-    margin: 10% auto;
-  }
-
-  .modal-header {
-    padding: 20px;
-  }
-
-  .modal-header h3 {
-    font-size: 1.2rem;
-  }
-
-  .modal-body {
-    padding: 25px 20px;
-  }
-
-  .modal-footer {
-    padding: 20px;
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  .cancel-btn,
-  .confirm-btn {
-    flex: 1;
-    justify-content: center;
-  }
-}
-/* ---------- HORIZONTAL / CAROUSEL LAYOUT ---------- */
-/* When .horizontal is added to a .menu-category it becomes a horizontal scroller */
-.menu-category.horizontal {
-  display: flex !important;
-  flex-wrap: nowrap;
-  gap: 16px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 12px 6px;
-  scroll-snap-type: x mandatory;
-  align-items: flex-start;
-}
-
-/* Cards become fixed-width, horizontally scrollable */
-.menu-category.horizontal .menu-item {
-  min-width: 260px; /* card width — tweak as needed */
-  max-width: 260px;
-  flex: 0 0 auto;
-  scroll-snap-align: start;
-}
-
-/* Slight visual tweak when in carousel */
-.menu-category.horizontal .menu-item {
-  margin-bottom: 0;
-}
-
-/* hide default webkit scrollbar but keep native scrolling */
-.menu-category.horizontal::-webkit-scrollbar {
-  height: 8px;
-}
-.menu-category.horizontal::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.07);
-  border-radius: 8px;
-}
-
-/* Layout controls / arrows */
-.menu-layout-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 10px 0 8px;
-}
-
-.layout-toggle {
-  display: flex;
-  gap: 8px;
-}
-
-.layout-btn {
-  border: 1px solid #e9ecef;
-  background: white;
-  padding: 8px 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.layout-btn.active {
-  background: linear-gradient(135deg, #43a1c7, #356980);
-  color: white;
-  border-color: #43a1c7;
-}
-
-/* arrows */
-.carousel-arrows {
-  display: flex;
-  gap: 8px;
-}
-.scroller-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  border: 1px solid #e9ecef;
-  background: white;
-  cursor: pointer;
-  font-size: 1.1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-}
-.scroller-btn:hover {
-  transform: translateY(-2px);
-}
-
-/* hide arrows when not in carousel (JS toggles .visible) */
-.carousel-arrows.hidden {
-  display: none;
-}
-
-/* responsiveness: smaller card widths on small screens */
-@media (max-width: 768px) {
-  .menu-category.horizontal .menu-item {
-    min-width: 220px;
-    max-width: 220px;
-  }
-}
-@media (max-width: 480px) {
-  .menu-category.horizontal .menu-item {
-    min-width: 180px;
-    max-width: 180px;
-  }
-}
-
-/* Splash Screen */
+/* ==========================================
+   SPLASH SCREEN
+   ========================================== */
 .splash-screen {
   position: fixed;
   top: 0;
@@ -1339,40 +963,20 @@ body {
   animation: splashFadeIn 1.5s ease-out;
 }
 
-.splash-logo {
-  margin-bottom: 30px;
-}
-
 .splash-logo .logo-circle {
   width: 120px;
   height: 120px;
-  background: linear-gradient(135deg, #43a1c7 0%, #2b5465 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: 0 8px 30px rgba(67, 161, 199, 0.4);
-  margin: 0 auto;
+  margin: 0 auto 30px;
   animation: logoFloat 2s ease-in-out infinite alternate;
 }
 
 .splash-logo .logo-image {
   width: 80px;
   height: 80px;
-  object-fit: contain;
-  border-radius: 50%;
-  max-width: 100%;
-  max-height: 100%;
 }
 
 .splash-logo .logo-crown {
-  position: absolute;
-  top: -8px;
-  right: -8px;
   font-size: 1.8rem;
-  color: #43a1c7;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
   animation: crownGlow 2s ease-in-out infinite alternate;
 }
 
@@ -1400,14 +1004,11 @@ body {
   animation: subtitleFade 1s ease-out 1s both;
 }
 
-.splash-loading {
-  margin-top: 30px;
-}
-
 .loading-dots {
   display: flex;
   justify-content: center;
   gap: 8px;
+  margin-top: 30px;
 }
 
 .loading-dots span {
@@ -1431,7 +1032,53 @@ body {
   animation-delay: 0s;
 }
 
-/* Splash Screen Animations */
+/* ==========================================
+   ANIMATIONS
+   ========================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes splashFadeIn {
   from {
     opacity: 0;
@@ -1493,9 +1140,7 @@ body {
 }
 
 @keyframes dotBounce {
-  0%,
-  80%,
-  100% {
+  0%, 80%, 100% {
     transform: scale(0);
     opacity: 0.5;
   }
@@ -1505,50 +1150,165 @@ body {
   }
 }
 
-/* Mobile Responsive for Splash Screen */
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
 @media (max-width: 768px) {
+  .tab-btn {
+    padding: 12px 8px;
+    font-size: 0.75rem;
+  }
+
+  .tab-btn i {
+    font-size: 1rem;
+  }
+
+  .tab-content {
+    padding: 15px;
+  }
+
+  .menu-category.active {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+
+  .menu-category.horizontal .menu-item {
+    min-width: 220px;
+    max-width: 220px;
+  }
+
+  .cart-section {
+    padding: 15px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+
+  .order-btn,
+  .submit-btn {
+    padding: 15px;
+    font-size: 1rem;
+  }
+
   .splash-logo .logo-circle {
     width: 100px;
     height: 100px;
   }
 
-  .splash-logo .logo-image {
-    width: 70px;
-    height: 70px;
-  }
-
-  .splash-logo .logo-crown {
-    font-size: 1.5rem;
-    top: -6px;
-    right: -6px;
-  }
-
   .splash-title {
     font-size: 2rem;
-    letter-spacing: 1px;
-  }
-
-  .splash-subtitle {
-    font-size: 0.9rem;
-    letter-spacing: 2px;
   }
 }
 
 @media (max-width: 480px) {
+  .hotel-name {
+    font-size: 1.4rem;
+  }
+
+  .hotel-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .logo-circle {
+    width: 50px;
+    height: 50px;
+  }
+
+  .tab-content {
+    padding: 20px 15px;
+  }
+
+  .panel-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .menu-category.active {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .menu-category.horizontal .menu-item {
+    min-width: 180px;
+    max-width: 180px;
+  }
+
+  .item-image {
+    aspect-ratio: 1 / 1;
+  }
+
+  .item-info h4 {
+    font-size: 0.95rem;
+  }
+
+  .item-info p {
+    font-size: 0.8rem;
+  }
+
+  .item-price {
+    font-size: 1rem;
+  }
+
+  .add-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .service-form {
+    padding: 20px;
+  }
+
+  .cart-section {
+    top: 160px;
+    padding: 20px;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: 10% auto;
+  }
+
+  .modal-header {
+    padding: 20px;
+  }
+
+  .modal-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .modal-body {
+    padding: 25px 20px;
+  }
+
+  .modal-footer {
+    padding: 20px;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .cancel-btn,
+  .confirm-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .notification-container {
+    top: 110px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+
+  .notification {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+  }
+
   .splash-logo .logo-circle {
     width: 80px;
     height: 80px;
-  }
-
-  .splash-logo .logo-image {
-    width: 60px;
-    height: 60px;
-  }
-
-  .splash-logo .logo-crown {
-    font-size: 1.2rem;
-    top: -5px;
-    right: -5px;
   }
 
   .splash-title {
@@ -1557,364 +1317,5 @@ body {
 
   .splash-subtitle {
     font-size: 0.8rem;
-  }
-}
-
-/* chat gpt */
-
-.menu-section {
-  margin-bottom: 30px;
-  text-align: center; /* centers both title & layout buttons */
-}
-
-/* Menu title */
-.menu-section h3 {
-  font-family: "Playfair Display", serif;
-  color: #2c3e50;
-  margin-bottom: 10px;
-  font-size: 1.4rem;
-  font-weight: 600;
-}
-
-/* Layout buttons centered below title */
-.menu-layout-controls {
-  display: flex;
-  justify-content: center; /* center horizontally */
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.layout-toggle {
-  display: flex;
-  gap: 8px;
-}
-
-.layout-btn {
-  border: 1px solid #e9ecef;
-  background: white;
-  padding: 8px 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.layout-btn.active {
-  background: linear-gradient(135deg, #43a1c7, #356980);
-  color: white;
-  border-color: #43a1c7;
-}
-
-/* chat gpt */
-/* ---------- HORIZONTAL / CAROUSEL LAYOUT (updated) ---------- */
-/* When .horizontal is added to a .menu-category it becomes a horizontal scroller */
-/* Only the .menu-category that is .active will be visible in carousel mode (JS handles hiding) */
-.menu-category.horizontal {
-  display: flex !important;
-  flex-wrap: nowrap;
-  gap: 16px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 12px 6px;
-  scroll-snap-type: x mandatory;
-  align-items: stretch; /* make all cards same height */
-  align-content: stretch;
-}
-
-/* Cards become fixed-width, horizontally scrollable, and equal height */
-.menu-category.horizontal .menu-item {
-  min-width: 260px; /* card width — tweak as needed */
-  max-width: 260px;
-  flex: 0 0 auto;
-  scroll-snap-align: start;
-
-  /* Force same height and layout */
-  display: flex;
-  flex-direction: column;
-  height: 360px; /* fixed height for equal boxes (tweak as needed) */
-  box-sizing: border-box;
-  margin-bottom: 0;
-}
-
-/* Make image part take a consistent portion of the card */
-.menu-category.horizontal .menu-item .item-image {
-  flex: 0 0 55%; /* 55% of card height for the image area */
-  height: auto;
-  overflow: hidden;
-}
-
-/* Ensure image covers the image area */
-.menu-category.horizontal .menu-item .item-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Body grows to fill remaining vertical space, allow text to truncate elegantly */
-.menu-category.horizontal .menu-item .item-body {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  overflow: hidden;
-}
-
-/* Keep item-info from overflowing the card */
-.menu-category.horizontal .menu-item .item-info {
-  flex: 1 1 auto;
-  overflow: hidden;
-}
-
-/* Footer stays fixed height so all cards line up */
-.menu-category.horizontal .menu-item .item-footer {
-  flex: 0 0 60px;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Make titles truncate when too long */
-.menu-category.horizontal .menu-item .item-title,
-.menu-category.horizontal .menu-item .item-info h4 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Scrollbar tweaks */
-.menu-category.horizontal::-webkit-scrollbar {
-  height: 8px;
-}
-.menu-category.horizontal::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.07);
-  border-radius: 8px;
-}
-
-/* Responsiveness: smaller widths on smaller screens */
-@media (max-width: 768px) {
-  .menu-category.horizontal .menu-item {
-    min-width: 220px;
-    max-width: 220px;
-    height: 340px;
-  }
-  .menu-category.horizontal .menu-item .item-footer {
-    flex: 0 0 58px;
-  }
-}
-@media (max-width: 480px) {
-  .menu-category.horizontal .menu-item {
-    min-width: 180px;
-    max-width: 180px;
-    height: 320px;
-  }
-  .menu-category.horizontal .menu-item .item-footer {
-    flex: 0 0 54px;
-  }
-}
-
-
-
-
-
-/* Carousel / equal-card styling: allow full text to wrap (no truncation) */
-.menu-category.horizontal .menu-item {
-  /* keep layout from previous suggestions */
-  min-width: 260px;
-  max-width: 260px;
-  flex: 0 0 auto;
-  scroll-snap-align: start;
-  display: flex;
-  flex-direction: column;
-  height: 500px; /* a default fallback that JS will override when active */
-  box-sizing: border-box;
-  margin-bottom: 0;
-}
-
-.menu-category.horizontal .menu-item .item-image {
-  flex: 0 0 55%;
-  overflow: hidden;
-}
-
-.menu-category.horizontal .menu-item .item-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Allow title and description to wrap to multiple lines */
-.menu-category.horizontal .menu-item .item-title,
-.menu-category.horizontal .menu-item .item-info h4,
-.menu-category.horizontal .menu-item .item-info p,
-.menu-category.horizontal .menu-item .item-subtitle {
-  white-space: normal;      /* allow wrapping */
-  overflow: visible;        /* don't hide overflow */
-  text-overflow: unset;
-  word-break: break-word;   /* prevent overflow on long words */
-}
-
-/* item-body grows/shrinks but JS will set explicit heights for uniformity */
-.menu-category.horizontal .menu-item .item-body {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  overflow: visible; /* ensure full text visible */
-}
-
-/* Footer fixed height (keeps alignment) */
-.menu-category.horizontal .menu-item .item-footer {
-  flex: 0 0 60px;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-
-/* CAROUSEL: allow wrapping (no truncation) and let JS set heights */
-.menu-category.horizontal {
-  display: flex !important;
-  flex-wrap: nowrap;
-  gap: 16px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 12px 6px;
-  scroll-snap-type: x mandatory;
-  align-items: stretch;
-}
-
-.menu-category.horizontal .menu-item {
-  min-width: 260px;
-  max-width: 260px;
-  flex: 0 0 auto;
-  scroll-snap-align: start;
-
-  display: flex;
-  flex-direction: column;
-
-  /* DON'T set a hard height here — JS will set inline heights */
-  height: auto;
-  box-sizing: border-box;
-  margin-bottom: 0;
-}
-
-/* keep image area consistent but let it size naturally */
-.menu-category.horizontal .menu-item .item-image {
-  flex: 0 0 auto;
-  overflow: hidden;
-}
-
-/* images should cover the image area */
-.menu-category.horizontal .menu-item .item-image img {
-  width: 100%;
-  height: auto; /* allow image to define its height */
-  display: block;
-  object-fit: cover;
-}
-
-/* content must be allowed to wrap fully */
-.menu-category.horizontal .menu-item .item-title,
-.menu-category.horizontal .menu-item .item-info h4,
-.menu-category.horizontal .menu-item .item-info p,
-.menu-category.horizontal .menu-item .item-subtitle {
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  word-break: break-word;
-}
-
-/* body uses natural height */
-.menu-category.horizontal .menu-item .item-body {
-  flex: 1 1 auto;
-  display: block;
-  padding: 10px;
-  overflow: visible;
-}
-
-/* footer fixed-ish but not forcing clipping */
-.menu-category.horizontal .menu-item .item-footer {
-  flex: 0 0 auto;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* ---------- IMAGE FILL PATCH (Grid + Carousel) ---------- */
-/* Targets: .item-image img OR direct <img class="item-src"> inside .menu-item */
-
-/* 1) Make sure image containers have a consistent aspect ratio */
-.menu-item > .item-image,
-.menu-item > img.item-src {
-  width: 100%;
-  aspect-ratio: 4 / 3;    /* change to 1/1 for squares or 16/9 if you prefer */
-  overflow: hidden;
-  background: #f1f3f5;
-  display: block;
-}
-
-/* 2) Ensure images always cover the container without distortion */
-.menu-item img,
-.menu-item .item-image img,
-.menu-item img.item-src {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;     /* fills while preserving aspect, crops if needed */
-  display: block;
-  vertical-align: middle;
-}
-
-/* 3) Carousel (horizontal) — keep cards visually equal and let body grow */
-.menu-category.horizontal .menu-item {
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  /* don't force a hard height here; cards will size naturally.
-     If you want all cards to be same exact height, set min-height here (example below). */
-  /* min-height: 360px; */
-}
-
-/* make the image area a fixed portion in carousel cards (keeps alignment) */
-.menu-category.horizontal .menu-item > .item-image,
-.menu-category.horizontal .menu-item > img.item-src {
-  flex: 0 0 auto;
-  /* keep same aspect in carousel; if you prefer taller images, increase ratio */
-  aspect-ratio: 4 / 3;
-  width: 100%;
-  overflow: hidden;
-}
-
-/* body/content grows to fill remaining space & won't overflow the card */
-.menu-category.horizontal .menu-item .item-body {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-}
-
-/* grid view: ensure cards keep consistent layout */
-.menu-category:not(.horizontal) .menu-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.menu-category:not(.horizontal) .menu-item > .item-image,
-.menu-category:not(.horizontal) .menu-item > img.item-src {
-  /* grid uses same aspect so cards have same top image size */
-  aspect-ratio: 4 / 3;
-  width: 100%;
-  overflow: hidden;
-}
-
-/* small screens: use a square image to save vertical space */
-@media (max-width: 480px) {
-  .menu-item > .item-image,
-  .menu-item > img.item-src,
-  .menu-category.horizontal .menu-item > .item-image,
-  .menu-category.horizontal .menu-item > img.item-src {
-    aspect-ratio: 1 / 1;
   }
 }
