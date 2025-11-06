@@ -243,7 +243,6 @@ body {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   padding: 16px 0;
-  /* Removed sticky behavior */
 }
 
 
