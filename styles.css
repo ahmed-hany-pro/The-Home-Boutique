@@ -243,12 +243,9 @@ body {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   padding: 16px 0;
-  position: sticky;
-  top: 180px;
-  z-index: 98;
-  background: linear-gradient(to bottom, #fdfdfd, #fcfcfd);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  /* Removed sticky behavior */
 }
+
 
 .category-btn {
   padding: 12px 20px;
