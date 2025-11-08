@@ -1015,7 +1015,7 @@ function waitForImagesInContainer(container, timeoutMs = 1200) {
   return Promise.race([Promise.all(promises), timeout]);
 }
 
-async function adjustCarouselCardHeights() {
+async function adjustCarouselCardHeights(resetToStart = false) {
   if (menuLayout !== "carousel") {
     document.querySelectorAll(".menu-category .menu-item").forEach((it) => {
       it.style.height = "";
@@ -1026,7 +1026,7 @@ async function adjustCarouselCardHeights() {
   const activePanel = document.querySelector(".menu-category.active");
   if (!activePanel) return;
 
-  // Save current scroll position
+  // Save current scroll position so we can restore it later if needed
   const currentScrollLeft = activePanel.scrollLeft;
 
   activePanel.style.display = "flex";
@@ -1052,9 +1052,19 @@ async function adjustCarouselCardHeights() {
     item.style.height = maxHeight + "px";
   });
 
-  // Restore scroll position without animation
-  activePanel.scrollLeft = currentScrollLeft;
+  // If the caller asked to reset to the first card (for example on category click),
+  // scroll to start. Otherwise restore the previous scroll position (clamped).
+  if (resetToStart) {
+    activePanel.scrollTo({ left: 0, behavior: "smooth" });
+  } else {
+    // clamp to valid range (in case content width changed)
+    const maxScrollLeft = Math.max(0, activePanel.scrollWidth - activePanel.clientWidth);
+    const restoreLeft = Math.min(currentScrollLeft, maxScrollLeft);
+    // instant restore — change behavior to "smooth" if you prefer an animation
+    activePanel.scrollTo({ left: restoreLeft, behavior: "auto" });
+  }
 }
+
 
 function runAdjustHeightsDeferred() {
   clearTimeout(window.__adjustCarouselTimeout);
