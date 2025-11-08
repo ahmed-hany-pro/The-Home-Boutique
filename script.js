@@ -1026,6 +1026,9 @@ async function adjustCarouselCardHeights() {
   const activePanel = document.querySelector(".menu-category.active");
   if (!activePanel) return;
 
+  // Save current scroll position
+  const currentScrollLeft = activePanel.scrollLeft;
+
   activePanel.style.display = "flex";
   await waitForImagesInContainer(activePanel, 1400);
 
@@ -1049,7 +1052,8 @@ async function adjustCarouselCardHeights() {
     item.style.height = maxHeight + "px";
   });
 
-  activePanel.scrollTo({ left: 0, behavior: "smooth" });
+  // Restore scroll position without animation
+  activePanel.scrollLeft = currentScrollLeft;
 }
 
 function runAdjustHeightsDeferred() {
