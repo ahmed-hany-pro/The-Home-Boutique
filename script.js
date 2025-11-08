@@ -254,12 +254,11 @@ function switchCategory(category) {
   );
 
   if (activePanel) {
-  activePanel.classList.add("active");
-  applyMenuLayout();
-  activePanel.scrollTo({ left: 0, behavior: "smooth" }); // ✅ keep here
-  runAdjustHeightsDeferred();
-}
-
+    activePanel.classList.add("active");
+    applyMenuLayout();
+    activePanel.scrollTo({ left: 0, behavior: "smooth" });
+    runAdjustHeightsDeferred();
+  }
 }
 
 function setupLayoutButtons() {
@@ -270,10 +269,7 @@ function setupLayoutButtons() {
       localStorage.setItem("menuLayout", menuLayout);
       applyMenuLayout();
 
-      const activePanel = getActivePanel();
-      if (activePanel) {
-        activePanel.scrollTo({ left: 0, behavior: "smooth" });
-      }
+      // do not reset horizontal scroll here — preserve where user left it
       runAdjustHeightsDeferred();
     }
 
@@ -288,14 +284,6 @@ function setupLayoutButtons() {
     }
   });
 }
-document.querySelectorAll(".menu-category").forEach(panel => {
-  panel.addEventListener("scroll", () => {
-    if (menuLayout === "carousel" && panel.classList.contains("active")) {
-      const category = panel.dataset.category;
-      carouselScrollPositions[category] = panel.scrollLeft;
-    }
-  });
-});
 
 function getActivePanel() {
   return document.querySelector(".menu-category.active");
@@ -325,11 +313,6 @@ function applyMenuLayout() {
       }
     });
 
-    if (active) {
-      const category = active.dataset.category;
-      const savedScroll = carouselScrollPositions[category] || 0;
-      active.scrollTo({ left: savedScroll, behavior: "instant" });
-    }
   } else {
     panels.forEach((panel) => {
       panel.style.display = "";
@@ -1096,7 +1079,6 @@ function waitForImagesInContainer(container, timeoutMs = 1200) {
   const timeout = new Promise((resolve) => setTimeout(resolve, timeoutMs));
   return Promise.race([Promise.all(promises), timeout]);
 }
-let carouselScrollPositions = {};
 
 async function adjustCarouselCardHeights() {
   if (menuLayout !== "carousel") {
@@ -1108,6 +1090,9 @@ async function adjustCarouselCardHeights() {
 
   const activePanel = document.querySelector(".menu-category.active");
   if (!activePanel) return;
+
+  // Preserve current horizontal scroll so we don't jump back to start
+  const previousScrollLeft = activePanel.scrollLeft || 0;
 
   activePanel.style.display = "flex";
   await waitForImagesInContainer(activePanel, 1400);
@@ -1132,7 +1117,8 @@ async function adjustCarouselCardHeights() {
     item.style.height = maxHeight + "px";
   });
 
-  activePanel.scrollTo({ left: 0, behavior: "smooth" });
+  // restore previous horizontal scroll instead of forcing 0
+  activePanel.scrollLeft = previousScrollLeft;
 }
 
 function runAdjustHeightsDeferred() {
