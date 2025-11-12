@@ -24,17 +24,27 @@ const GOOGLE_SHEETS_CONFIG = {
 };
 
 const CATEGORY_IMAGES = {
-  Salad: "https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200",
+  Salad:
+    "https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200",
   Soup: "https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=1200",
-  "Hot Drinks": "https://images.unsplash.com/photo-1498804103079-a6351b050096?q=80&w=1200",
-  Dessert: "https://images.unsplash.com/photo-1541782814452-d1df5a516422?q=80&w=1200",
-  "Oriental Dessert": "https://images.unsplash.com/photo-1606850246023-7fc9ba50f2be?q=80&w=1200",
-  Pizza: "https://images.unsplash.com/photo-1548365328-9f547fb09530?q=80&w=1200",
-  Sandwich: "https://images.unsplash.com/photo-1550317138-10000687a72b?q=80&w=1200",
-  Beverages: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=1200",
-  "Main Course": "https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200",
-  Pasta: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=1200",
-  Appetizer: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200",
+  "Hot Drinks":
+    "https://images.unsplash.com/photo-1498804103079-a6351b050096?q=80&w=1200",
+  Dessert:
+    "https://images.unsplash.com/photo-1541782814452-d1df5a516422?q=80&w=1200",
+  "Oriental Dessert":
+    "https://images.unsplash.com/photo-1606850246023-7fc9ba50f2be?q=80&w=1200",
+  Pizza:
+    "https://images.unsplash.com/photo-1548365328-9f547fb09530?q=80&w=1200",
+  Sandwich:
+    "https://images.unsplash.com/photo-1550317138-10000687a72b?q=80&w=1200",
+  Beverages:
+    "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=1200",
+  "Main Course":
+    "https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200",
+  Pasta:
+    "https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=1200",
+  Appetizer:
+    "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200",
 };
 
 // ==========================================
@@ -66,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initializeSplashScreen() {
   const splashScreen = document.getElementById("splashScreen");
-  
+
   setTimeout(() => {
     splashScreen.classList.add("fade-out");
     setTimeout(() => {
@@ -81,7 +91,7 @@ function initializeSplashScreen() {
 
 function initializeTabs() {
   const tabButtons = document.querySelectorAll(".tab-btn");
-  
+
   tabButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const targetTab = button.getAttribute("data-tab");
@@ -120,14 +130,14 @@ function initializeMenu() {
 
 function enhanceMenuWithImages() {
   const menuItems = document.querySelectorAll(".menu-item");
-  
+
   menuItems.forEach((item) => {
     const categoryWrapper = item.closest(".menu-category");
     const category = categoryWrapper?.getAttribute("data-category") || "";
     const nameElement = item.querySelector(".item-info h4");
     const itemName = nameElement?.textContent.trim() || "";
 
-    const inlineImg = item.querySelector('img[data-item-image], img.item-src');
+    const inlineImg = item.querySelector("img[data-item-image], img.item-src");
     const desiredSrc = getImageUrl(item, itemName, category);
 
     let imageDiv = item.querySelector(".item-image");
@@ -156,7 +166,7 @@ function enhanceMenuWithImages() {
       primaryImg.remove();
     }
 
-    item.querySelectorAll(':scope > img').forEach((stray) => {
+    item.querySelectorAll(":scope > img").forEach((stray) => {
       if (!imageDiv.contains(stray)) {
         imageDiv.appendChild(stray);
       }
@@ -202,18 +212,18 @@ function enhanceMenuWithImages() {
 
 function getImageUrl(item, itemName, category) {
   if (item.dataset?.image) return item.dataset.image.trim();
-  
-  const inlineImg = item.querySelector('img[data-item-image], img.item-src');
+
+  const inlineImg = item.querySelector("img[data-item-image], img.item-src");
   if (inlineImg?.src) return inlineImg.src;
-  
+
   if (CATEGORY_IMAGES[category]) return CATEGORY_IMAGES[category];
-  
+
   return null;
 }
 
 function setupCategoryButtons() {
   const categoryButtons = document.querySelectorAll(".category-btn");
-  
+
   categoryButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const category = button.getAttribute("data-category");
@@ -231,16 +241,18 @@ function switchCategory(category) {
   document.querySelectorAll(".category-btn").forEach((btn) => {
     btn.classList.remove("active");
   });
-  document.querySelector(`[data-category="${category}"]`).classList.add("active");
+  document
+    .querySelector(`[data-category="${category}"]`)
+    .classList.add("active");
 
   document.querySelectorAll(".menu-category").forEach((panel) => {
     panel.classList.remove("active");
   });
-  
+
   const activePanel = document.querySelector(
     `.menu-category[data-category="${category}"]`
   );
-  
+
   if (activePanel) {
     activePanel.classList.add("active");
     applyMenuLayout();
@@ -257,7 +269,7 @@ function setupLayoutButtons() {
       menuLayout = layoutBtn.dataset.layout || "grid";
       localStorage.setItem("menuLayout", menuLayout);
       applyMenuLayout();
-      
+
       // Only reset scroll when switching TO carousel layout
       const activePanel = getActivePanel();
       if (activePanel && menuLayout === "carousel") {
@@ -319,7 +331,7 @@ function applyMenuLayout() {
 
 function setupAddButtons() {
   const addButtons = document.querySelectorAll(".add-btn");
-  
+
   addButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const name = button.getAttribute("data-name");
@@ -389,9 +401,13 @@ function updateCartDisplay() {
           <div class="cart-item-price">${itemTotal.toFixed(2)} L.E</div>
         </div>
         <div class="cart-item-controls">
-          <button class="quantity-btn" onclick="updateQuantity('${item.name}', -1)">-</button>
+          <button class="quantity-btn" onclick="updateQuantity('${
+            item.name
+          }', -1)">-</button>
           <span class="quantity">${item.quantity}</span>
-          <button class="quantity-btn" onclick="updateQuantity('${item.name}', 1)">+</button>
+          <button class="quantity-btn" onclick="updateQuantity('${
+            item.name
+          }', 1)">+</button>
         </div>
       </div>
     `;
@@ -407,10 +423,18 @@ function updateCartDisplay() {
 // ==========================================
 
 function initializeForms() {
-  document.getElementById("placeOrderBtn").addEventListener("click", handleFoodOrder);
-  document.getElementById("tourForm").addEventListener("submit", handleTourForm);
-  document.getElementById("transportForm").addEventListener("submit", handleTransportForm);
-  document.getElementById("housekeepingForm").addEventListener("submit", handleHousekeepingForm);
+  document
+    .getElementById("placeOrderBtn")
+    .addEventListener("click", handleFoodOrder);
+  document
+    .getElementById("tourForm")
+    .addEventListener("submit", handleTourForm);
+  document
+    .getElementById("transportForm")
+    .addEventListener("submit", handleTransportForm);
+  document
+    .getElementById("housekeepingForm")
+    .addEventListener("submit", handleHousekeepingForm);
 }
 
 function initializeCheckboxes() {
@@ -441,7 +465,9 @@ function initializeCheckboxes() {
 
   if (needGuideCheckbox && languageGroup) {
     needGuideCheckbox.addEventListener("change", () => {
-      languageGroup.style.display = needGuideCheckbox.checked ? "block" : "none";
+      languageGroup.style.display = needGuideCheckbox.checked
+        ? "block"
+        : "none";
       if (!needGuideCheckbox.checked) {
         document.getElementById("tourGuideLanguage").value = "";
       }
@@ -471,7 +497,10 @@ function handleFoodOrder(e) {
   }
 
   const orderDetails = generateFoodOrderMessage(customerName, roomNumber);
-  const confirmationContent = generateFoodConfirmationContent(customerName, roomNumber);
+  const confirmationContent = generateFoodConfirmationContent(
+    customerName,
+    roomNumber
+  );
 
   let orderTotal = 0;
   let orderItems = [];
@@ -599,7 +628,7 @@ function handleHousekeepingForm(e) {
 
   const housekeepingDetails = generateHousekeepingMessage(formData);
   const confirmationContent = generateHousekeepingConfirmationContent(formData);
-  
+
   const emailData = {
     message: housekeepingDetails,
     recipient: EMAIL_CONFIG.recipients.housekeeping,
@@ -624,7 +653,9 @@ function generateFoodOrderMessage(customerName, roomNumber) {
   cart.forEach((item) => {
     const itemTotal = item.price * item.quantity;
     total += itemTotal;
-    message += ` x${item.quantity} ${item.name} -> ${itemTotal.toFixed(2)} L.E\n`;
+    message += ` x${item.quantity} ${item.name} -> ${itemTotal.toFixed(
+      2
+    )} L.E\n`;
   });
 
   message += `\n💰 Total: ${total.toFixed(2)} L.E\n`;
@@ -643,7 +674,7 @@ function generateTourMessage(formData) {
   message += `🕐 Time: ${formData.get("tourTime")}\n`;
   message += `⏱️ Duration: ${formData.get("tourDuration")}\n`;
   message += `👥 Participants: ${formData.get("tourParticipants")}\n`;
-  
+
   if (formData.get("tourNeedGuide")) {
     message += "🧭 Tour Guide: Required\n";
     if (formData.get("tourGuideLanguage")) {
@@ -675,7 +706,9 @@ function generateTransportMessage(formData) {
   message += `👥 Passengers: ${formData.get("passengers")}\n`;
 
   if (formData.get("transportSpecialRequests")) {
-    message += `📝 Special Requests: ${formData.get("transportSpecialRequests")}\n`;
+    message += `📝 Special Requests: ${formData.get(
+      "transportSpecialRequests"
+    )}\n`;
   }
 
   message += `\n📅 Request Date: ${new Date().toLocaleDateString()}\n`;
@@ -699,7 +732,9 @@ function generateHousekeepingMessage(formData) {
   }
 
   if (formData.get("housekeepingSpecialRequests")) {
-    message += `📝 Special Requests: ${formData.get("housekeepingSpecialRequests")}\n`;
+    message += `📝 Special Requests: ${formData.get(
+      "housekeepingSpecialRequests"
+    )}\n`;
   }
 
   message += `\n📅 Request Date: ${new Date().toLocaleDateString()}\n`;
@@ -750,10 +785,14 @@ function generateTourConfirmationContent(formData) {
   return `
     <div class="confirmation-content">
       <div class="room-number">
-        <i class="fas fa-user"></i> Your Name: ${formData.get("tourCustomerName")}
+        <i class="fas fa-user"></i> Your Name: ${formData.get(
+          "tourCustomerName"
+        )}
       </div>
       <div class="room-number">
-        <i class="fas fa-door-open"></i> Room Number: ${formData.get("tourRoomNumber")}
+        <i class="fas fa-door-open"></i> Room Number: ${formData.get(
+          "tourRoomNumber"
+        )}
       </div>
       <h4><i class="fas fa-map-marked-alt"></i> Tour Request Details</h4>
       <p><strong>Destination:</strong> ${formData.get("tourDestination")}</p>
@@ -761,13 +800,23 @@ function generateTourConfirmationContent(formData) {
       <p><strong>Time:</strong> ${formData.get("tourTime")}</p>
       <p><strong>Duration:</strong> ${formData.get("tourDuration")}</p>
       <p><strong>Participants:</strong> ${formData.get("tourParticipants")}</p>
-      <p><strong>Tour Guide:</strong> ${formData.get("tourNeedGuide") ? "Required" : "Not required"}</p>
-      ${formData.get("tourNeedGuide") && formData.get("tourGuideLanguage") 
-        ? `<p><strong>Guide Language:</strong> ${formData.get("tourGuideLanguage")}</p>` 
-        : ""}
-      ${formData.get("tourSpecialRequests") 
-        ? `<p><strong>Special Requests:</strong> ${formData.get("tourSpecialRequests")}</p>` 
-        : ""}
+      <p><strong>Tour Guide:</strong> ${
+        formData.get("tourNeedGuide") ? "Required" : "Not required"
+      }</p>
+      ${
+        formData.get("tourNeedGuide") && formData.get("tourGuideLanguage")
+          ? `<p><strong>Guide Language:</strong> ${formData.get(
+              "tourGuideLanguage"
+            )}</p>`
+          : ""
+      }
+      ${
+        formData.get("tourSpecialRequests")
+          ? `<p><strong>Special Requests:</strong> ${formData.get(
+              "tourSpecialRequests"
+            )}</p>`
+          : ""
+      }
       <p><strong>Request Date:</strong> ${new Date().toLocaleDateString()}</p>
     </div>
   `;
@@ -777,10 +826,14 @@ function generateTransportConfirmationContent(formData) {
   return `
     <div class="confirmation-content">
       <div class="room-number">
-        <i class="fas fa-user"></i> Your Name: ${formData.get("transportCustomerName")}
+        <i class="fas fa-user"></i> Your Name: ${formData.get(
+          "transportCustomerName"
+        )}
       </div>
       <div class="room-number">
-        <i class="fas fa-door-open"></i> Room Number: ${formData.get("transportRoomNumber")}
+        <i class="fas fa-door-open"></i> Room Number: ${formData.get(
+          "transportRoomNumber"
+        )}
       </div>
       <h4><i class="fas fa-car"></i> Transportation Request Details</h4>
       <p><strong>Transport Type:</strong> ${formData.get("transportType")}</p>
@@ -789,9 +842,13 @@ function generateTransportConfirmationContent(formData) {
       <p><strong>Date:</strong> ${formData.get("transportDate")}</p>
       <p><strong>Time:</strong> ${formData.get("transportTime")}</p>
       <p><strong>Passengers:</strong> ${formData.get("passengers")}</p>
-      ${formData.get("transportSpecialRequests") 
-        ? `<p><strong>Special Requests:</strong> ${formData.get("transportSpecialRequests")}</p>` 
-        : ""}
+      ${
+        formData.get("transportSpecialRequests")
+          ? `<p><strong>Special Requests:</strong> ${formData.get(
+              "transportSpecialRequests"
+            )}</p>`
+          : ""
+      }
       <p><strong>Request Date:</strong> ${new Date().toLocaleDateString()}</p>
     </div>
   `;
@@ -816,16 +873,24 @@ function generateHousekeepingConfirmationContent(formData) {
   return `
     <div class="confirmation-content">
       <div class="room-number">
-        <i class="fas fa-user"></i> Your Name: ${formData.get("housekeepingCustomerName")}
+        <i class="fas fa-user"></i> Your Name: ${formData.get(
+          "housekeepingCustomerName"
+        )}
       </div>
       <div class="room-number">
-        <i class="fas fa-door-open"></i> Room Number: ${formData.get("housekeepingRoomNumber")}
+        <i class="fas fa-door-open"></i> Room Number: ${formData.get(
+          "housekeepingRoomNumber"
+        )}
       </div>
       <h4><i class="fas fa-home"></i> Housekeeping Request Details</h4>
       ${serviceDetails}
-      ${formData.get("housekeepingSpecialRequests") 
-        ? `<p><strong>Special Requests:</strong> ${formData.get("housekeepingSpecialRequests")}</p>` 
-        : ""}
+      ${
+        formData.get("housekeepingSpecialRequests")
+          ? `<p><strong>Special Requests:</strong> ${formData.get(
+              "housekeepingSpecialRequests"
+            )}</p>`
+          : ""
+      }
       <p><strong>Request Date:</strong> ${new Date().toLocaleDateString()}</p>
     </div>
   `;
@@ -872,8 +937,10 @@ window.onclick = function (event) {
 function saveToGoogleSheets(orderData) {
   if (!GOOGLE_SHEETS_CONFIG.enableLogging) return;
 
-  if (!GOOGLE_SHEETS_CONFIG.webAppUrl || 
-      GOOGLE_SHEETS_CONFIG.webAppUrl.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
+  if (
+    !GOOGLE_SHEETS_CONFIG.webAppUrl ||
+    GOOGLE_SHEETS_CONFIG.webAppUrl.includes("YOUR_GOOGLE_APPS_SCRIPT")
+  ) {
     console.log("Google Sheets URL not configured. Skipping data save.");
     return;
   }
@@ -915,7 +982,9 @@ function sendEmail(message, recipient, subject, roomNumber, orderData = null) {
         document.getElementById("customerName").value = "";
         document.getElementById("roomNumber").value = "";
       } else {
-        document.querySelectorAll(".service-form").forEach((form) => form.reset());
+        document
+          .querySelectorAll(".service-form")
+          .forEach((form) => form.reset());
       }
     })
     .catch(function (error) {
