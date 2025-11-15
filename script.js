@@ -1197,7 +1197,7 @@ function handleSearch(e) {
   });
 
   // Reorder category buttons - categories with results first
-  reorderCategoryButtons(categoryResults, categoryMatchCounts);
+  const firstCategoryWithResults = reorderCategoryButtons(categoryResults, categoryMatchCounts);
 
   // Update category buttons to show which have results
   categoryButtons.forEach((btn) => {
@@ -1212,6 +1212,11 @@ function handleSearch(e) {
       btn.style.pointerEvents = "none";
     }
   });
+
+  // Switch to the first category with results
+  if (firstCategoryWithResults) {
+    switchCategory(firstCategoryWithResults);
+  }
 
   // Apply current layout
   applyMenuLayout();
@@ -1245,7 +1250,7 @@ let originalCategoryButtonsOrder = null;
 
 function reorderCategoryButtons(categoryResults, categoryMatchCounts) {
   const categoryButtonsContainer = document.querySelector(".menu-categories");
-  if (!categoryButtonsContainer) return;
+  if (!categoryButtonsContainer) return null;
 
   const allButtons = Array.from(categoryButtonsContainer.querySelectorAll(".category-btn"));
   
@@ -1281,6 +1286,13 @@ function reorderCategoryButtons(categoryResults, categoryMatchCounts) {
   // Clear and re-append in new order
   categoryButtonsContainer.innerHTML = "";
   sortedButtons.forEach(btn => categoryButtonsContainer.appendChild(btn));
+
+  // Return the first category with results
+  const firstCategoryWithResults = sortedButtons.find(btn => 
+    categoryResults.has(btn.getAttribute("data-category"))
+  );
+  
+  return firstCategoryWithResults ? firstCategoryWithResults.getAttribute("data-category") : null;
 }
 
 function restoreCategoryButtonsOrder() {
@@ -1312,24 +1324,36 @@ function clearSearch() {
   const searchPanel = document.querySelector('.menu-category[data-category="SearchResults"]');
   if (searchPanel) searchPanel.remove();
 
-  // Unhide all original items and categories
+  // Remove no results messages
+  document.querySelectorAll(".no-results-message").forEach(msg => msg.remove());
+
+  // Show all items in their original categories
   document.querySelectorAll(".menu-item").forEach((item) => {
+    item.style.display = "";
     item.classList.remove("hidden", "highlight");
   });
+
+  // Reset all categories display
   document.querySelectorAll(".menu-category").forEach((cat) => {
     cat.style.display = "";
     cat.classList.remove("horizontal");
   });
 
-  // Restore first category as active (existing behavior)
+  // Restore category buttons order
+  restoreCategoryButtonsOrder();
+
+  // Restore first category as active (original behavior)
   const categoryButtons = document.querySelectorAll(".category-btn");
   if (categoryButtons.length > 0) {
     const firstCategory = categoryButtons[0].getAttribute("data-category");
     switchCategory(firstCategory);
   }
 
+  // Restore original layout
+  applyMenuLayout();
   runAdjustHeightsDeferred();
-  // keep focus in the search box for convenience
+  
+  // Keep focus in the search box for convenience
   if (searchInput) searchInput.focus();
 }
 
