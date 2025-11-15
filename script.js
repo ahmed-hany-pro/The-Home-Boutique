@@ -1119,41 +1119,45 @@ function initializeSearch() {
   });
 }
 
+// Replace existing handleSearch and clearSearch with this version
+
 function handleSearch(e) {
-  const searchTerm = e.target.value.toLowerCase().trim();
+  const rawVal = e?.target?.value ?? "";
+  const searchTerm = String(rawVal).toLowerCase().trim();
   const clearBtn = document.getElementById("clearSearch");
-  const allItems = document.querySelectorAll(".menu-item");
-  const allCategories = document.querySelectorAll(".menu-category");
+  const allItems = Array.from(document.querySelectorAll(".menu-category:not([data-category='SearchResults']) .menu-item"));
+  const allCategories = Array.from(document.querySelectorAll(".menu-category:not([data-category='SearchResults'])"));
   const categoryButtons = document.querySelectorAll(".category-btn");
+  const categoryButtonsContainer = document.querySelector(".menu-categories");
 
   // Show/hide clear button
-  clearBtn.style.display = searchTerm ? "flex" : "none";
+  if (clearBtn) clearBtn.style.display = searchTerm ? "flex" : "none";
 
+  // If no search -> restore default view
   if (!searchTerm) {
-    // Reset to normal view
-    allItems.forEach((item) => {
-      item.classList.remove("hidden", "highlight");
-    });
-    allCategories.forEach((cat) => {
-      cat.classList.remove("active");
-    });
-    categoryButtons.forEach((btn) => {
-      btn.classList.remove("active");
+    // Remove any existing SearchResults panel
+    const existingSearchPanel = document.querySelector('.menu-category[data-category="SearchResults"]');
+    if (existingSearchPanel) existingSearchPanel.remove();
+
+    // Show all items in their original categories
+    allItems.forEach(item => {
+      item.style.display = "";
     });
 
-    // Show first category
-    if (categoryButtons.length > 0) {
-      const firstCategory = categoryButtons[0].getAttribute("data-category");
-      switchCategory(firstCategory);
-    }
+    // Restore category buttons order
+    restoreCategoryButtonsOrder();
+
+    // Restore original layout
+    applyMenuLayout();
+    runAdjustHeightsDeferred();
     return;
   }
 
-  // Search mode: show all categories and filter items
-  let hasResults = false;
-  let categoryResultCounts = new Map();
+  // --- Real-time search within categories ---
+  let hasResultsGlobal = false;
+  const categoryResults = new Map(); // Track which categories have results
+  const categoryMatchCounts = new Map(); // Track number of matches per category
 
-  // First pass: determine which items match and count per category
   allItems.forEach((item) => {
     const itemName = item.querySelector(".item-info h4")?.textContent.toLowerCase() || "";
     const itemDesc = item.querySelector(".item-info p")?.textContent.toLowerCase() || "";
@@ -1166,79 +1170,169 @@ function handleSearch(e) {
       categoryName.toLowerCase().includes(searchTerm);
 
     if (matches) {
-      item.classList.remove("hidden");
-      item.classList.add("highlight");
-      hasResults = true;
-
-      // Count results per category
-      const currentCount = categoryResultCounts.get(categoryName) || 0;
-      categoryResultCounts.set(categoryName, currentCount + 1);
-
-      // Brief animation
-      setTimeout(() => {
-        item.classList.remove("highlight");
-      }, 600);
+      hasResultsGlobal = true;
+      item.style.display = "";
+      
+      // Track this category has results
+      if (!categoryResults.has(categoryName)) {
+        categoryResults.set(categoryName, true);
+        categoryMatchCounts.set(categoryName, 0);
+      }
+      categoryMatchCounts.set(categoryName, categoryMatchCounts.get(categoryName) + 1);
     } else {
-      item.classList.add("hidden");
+      item.style.display = "none";
     }
   });
 
-  // Deactivate all category buttons during search
-  categoryButtons.forEach((btn) => {
-    btn.classList.remove("active");
+  // Show/hide categories based on whether they have matching items
+  allCategories.forEach((category) => {
+    const categoryName = category.getAttribute("data-category");
+    const hasResults = categoryResults.has(categoryName);
+    
+    if (hasResults) {
+      category.style.display = "";
+    } else {
+      category.style.display = "none";
+    }
   });
 
-  // Apply layout based on user selection
-  if (menuLayout === "carousel") {
-    // Carousel layout for search results
-    allCategories.forEach((category) => {
-      const categoryName = category.getAttribute("data-category");
-      const hasVisibleItems = categoryResultCounts.has(categoryName);
-      
-      if (hasVisibleItems) {
-        category.classList.add("active", "horizontal");
-        category.style.display = "flex";
-      } else {
-        category.classList.remove("active", "horizontal");
-        category.style.display = "none";
-      }
-    });
-  } else {
-    // Grid layout for search results
-    allCategories.forEach((category) => {
-      const categoryName = category.getAttribute("data-category");
-      const hasVisibleItems = categoryResultCounts.has(categoryName);
-      
-      if (hasVisibleItems) {
-        category.classList.add("active");
-        category.classList.remove("horizontal");
-        category.style.display = "grid";
-        category.style.gridTemplateColumns = "repeat(auto-fill, minmax(240px, 1fr))";
-        category.style.gap = "16px";
-      } else {
-        category.classList.remove("active");
-        category.style.display = "none";
-      }
-    });
-  }
+  // Reorder category buttons - categories with results first
+  reorderCategoryButtons(categoryResults, categoryMatchCounts);
 
-  if (!hasResults) {
-    showInfoMessage("No items found matching your search");
+  // Update category buttons to show which have results
+  categoryButtons.forEach((btn) => {
+    const categoryName = btn.getAttribute("data-category");
+    const hasResults = categoryResults.has(categoryName);
+    
+    if (hasResults) {
+      btn.style.opacity = "1";
+      btn.style.pointerEvents = "auto";
+    } else {
+      btn.style.opacity = "0.3";
+      btn.style.pointerEvents = "none";
+    }
+  });
+
+  // Apply current layout
+  applyMenuLayout();
+
+  // Show message if no results
+  if (!hasResultsGlobal) {
+    // Create temporary message in active panel
+    const activePanel = getActivePanel();
+    if (activePanel) {
+      const noResultsMsg = document.createElement("div");
+      noResultsMsg.className = "no-results-message";
+      noResultsMsg.style.cssText = "grid-column: 1/-1; text-align: center; padding: 40px; color: #6c757d; font-size: 1.1rem;";
+      noResultsMsg.innerHTML = '<i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3; display: block;"></i>No items found matching your search';
+      
+      // Remove any existing message
+      const existing = activePanel.querySelector(".no-results-message");
+      if (existing) existing.remove();
+      
+      activePanel.appendChild(noResultsMsg);
+    }
+  } else {
+    // Remove no results messages
+    document.querySelectorAll(".no-results-message").forEach(msg => msg.remove());
   }
 
   runAdjustHeightsDeferred();
 }
 
-// 4. MODIFIED: clearSearch()
+// Store original button order
+let originalCategoryButtonsOrder = null;
+
+function reorderCategoryButtons(categoryResults, categoryMatchCounts) {
+  const categoryButtonsContainer = document.querySelector(".menu-categories");
+  if (!categoryButtonsContainer) return;
+
+  const allButtons = Array.from(categoryButtonsContainer.querySelectorAll(".category-btn"));
+  
+  // Store original order if not already stored
+  if (!originalCategoryButtonsOrder) {
+    originalCategoryButtonsOrder = allButtons.map(btn => ({
+      element: btn,
+      category: btn.getAttribute("data-category")
+    }));
+  }
+
+  // Sort buttons: categories with results first (by match count), then rest
+  const sortedButtons = allButtons.sort((a, b) => {
+    const catA = a.getAttribute("data-category");
+    const catB = b.getAttribute("data-category");
+    
+    const hasResultsA = categoryResults.has(catA);
+    const hasResultsB = categoryResults.has(catB);
+    
+    // If both have results or both don't, sort by match count (descending)
+    if (hasResultsA && hasResultsB) {
+      return (categoryMatchCounts.get(catB) || 0) - (categoryMatchCounts.get(catA) || 0);
+    }
+    
+    // Categories with results come first
+    if (hasResultsA && !hasResultsB) return -1;
+    if (!hasResultsA && hasResultsB) return 1;
+    
+    // Keep original order for categories without results
+    return 0;
+  });
+
+  // Clear and re-append in new order
+  categoryButtonsContainer.innerHTML = "";
+  sortedButtons.forEach(btn => categoryButtonsContainer.appendChild(btn));
+}
+
+function restoreCategoryButtonsOrder() {
+  if (!originalCategoryButtonsOrder) return;
+  
+  const categoryButtonsContainer = document.querySelector(".menu-categories");
+  if (!categoryButtonsContainer) return;
+
+  // Clear container
+  categoryButtonsContainer.innerHTML = "";
+  
+  // Restore original order
+  originalCategoryButtonsOrder.forEach(item => {
+    categoryButtonsContainer.appendChild(item.element);
+    // Reset styles
+    item.element.style.opacity = "1";
+    item.element.style.pointerEvents = "auto";
+  });
+}
+
 function clearSearch() {
   const searchInput = document.getElementById("menuSearch");
   const clearBtn = document.getElementById("clearSearch");
 
-  searchInput.value = "";
-  clearBtn.style.display = "none";
-  handleSearch({ target: { value: "" } });
-  searchInput.focus();
+  if (searchInput) searchInput.value = "";
+  if (clearBtn) clearBtn.style.display = "none";
+
+  // Remove search results panel and reset items
+  const searchPanel = document.querySelector('.menu-category[data-category="SearchResults"]');
+  if (searchPanel) searchPanel.remove();
+
+  // Unhide all original items and categories
+  document.querySelectorAll(".menu-item").forEach((item) => {
+    item.classList.remove("hidden", "highlight");
+  });
+  document.querySelectorAll(".menu-category").forEach((cat) => {
+    cat.style.display = "";
+    cat.classList.remove("horizontal");
+  });
+
+  // Restore first category as active (existing behavior)
+  const categoryButtons = document.querySelectorAll(".category-btn");
+  if (categoryButtons.length > 0) {
+    const firstCategory = categoryButtons[0].getAttribute("data-category");
+    switchCategory(firstCategory);
+  }
+
+  runAdjustHeightsDeferred();
+  // keep focus in the search box for convenience
+  if (searchInput) searchInput.focus();
 }
+
 
 // ==========================================
 // IMAGE LOADING & HEIGHT ADJUSTMENT
