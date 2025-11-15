@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeMenu();
   initializeForms();
   initializeCheckboxes();
+  initializeSearch();
   updateCartDisplay();
   setMinimumDates();
 });
@@ -268,12 +269,19 @@ function setupLayoutButtons() {
     if (layoutBtn) {
       menuLayout = layoutBtn.dataset.layout || "grid";
       localStorage.setItem("menuLayout", menuLayout);
-      applyMenuLayout();
+      
+      // Check if search is active
+      const searchInput = document.getElementById("menuSearch");
+      const isSearchActive = searchInput && searchInput.value.trim() !== "";
+      
+      applyMenuLayout(isSearchActive);
 
-      // Only reset scroll when switching TO carousel layout
-      const activePanel = getActivePanel();
-      if (activePanel && menuLayout === "carousel") {
-        activePanel.scrollTo({ left: 0, behavior: "smooth" });
+      // Only reset scroll when switching TO carousel layout and NOT searching
+      if (!isSearchActive) {
+        const activePanel = getActivePanel();
+        if (activePanel && menuLayout === "carousel") {
+          activePanel.scrollTo({ left: 0, behavior: "smooth" });
+        }
       }
       runAdjustHeightsDeferred();
     }
@@ -290,11 +298,13 @@ function setupLayoutButtons() {
   });
 }
 
+
+
 function getActivePanel() {
   return document.querySelector(".menu-category.active");
 }
 
-function applyMenuLayout() {
+function applyMenuLayout(isSearchActive = false) {
   const panels = document.querySelectorAll(".menu-category");
 
   panels.forEach((panel) => {
@@ -310,24 +320,51 @@ function applyMenuLayout() {
 
   if (menuLayout === "carousel") {
     panels.forEach((panel) => {
-      if (panel === active) {
-        panel.style.display = "flex";
-        panel.classList.add("horizontal");
+      // During search, show all categories with visible items
+      if (isSearchActive) {
+        const hasVisibleItems = Array.from(panel.querySelectorAll(".menu-item"))
+          .some(item => !item.classList.contains("hidden"));
+        
+        if (hasVisibleItems) {
+          panel.style.display = "flex";
+          panel.classList.add("horizontal");
+        } else {
+          panel.style.display = "none";
+        }
       } else {
-        panel.style.display = "none";
+        // Normal behavior: only show active category
+        if (panel === active) {
+          panel.style.display = "flex";
+          panel.classList.add("horizontal");
+        } else {
+          panel.style.display = "none";
+        }
       }
     });
-    // Don't reset scroll position here - let it maintain current position
   } else {
+    // Grid layout
     panels.forEach((panel) => {
-      panel.style.display = "";
+      // During search, show all categories with visible items
+      if (isSearchActive) {
+        const hasVisibleItems = Array.from(panel.querySelectorAll(".menu-item"))
+          .some(item => !item.classList.contains("hidden"));
+        
+        if (hasVisibleItems) {
+          panel.style.display = "";
+        } else {
+          panel.style.display = "none";
+        }
+      } else {
+        panel.style.display = "";
+      }
     });
 
-    if (active) {
+    if (active && !isSearchActive) {
       active.style.display = "";
     }
   }
 }
+
 
 function setupAddButtons() {
   const addButtons = document.querySelectorAll(".add-btn");
@@ -1058,6 +1095,144 @@ function setMinimumDates() {
   document.querySelectorAll('input[type="date"]').forEach((input) => {
     input.min = today;
   });
+}
+
+// ==========================================
+// SEARCH FUNCTIONALITY
+// ==========================================
+
+function initializeSearch() {
+  const searchInput = document.getElementById("menuSearch");
+  const clearBtn = document.getElementById("clearSearch");
+
+  if (!searchInput || !clearBtn) return;
+
+  searchInput.addEventListener("input", handleSearch);
+  clearBtn.addEventListener("click", clearSearch);
+
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      clearSearch();
+    }
+  });
+}
+
+function handleSearch(e) {
+  const searchTerm = e.target.value.toLowerCase().trim();
+  const clearBtn = document.getElementById("clearSearch");
+  const allItems = document.querySelectorAll(".menu-item");
+  const allCategories = document.querySelectorAll(".menu-category");
+  const categoryButtons = document.querySelectorAll(".category-btn");
+
+  // Show/hide clear button
+  clearBtn.style.display = searchTerm ? "flex" : "none";
+
+  if (!searchTerm) {
+    // Reset to normal view
+    allItems.forEach((item) => {
+      item.classList.remove("hidden", "highlight");
+    });
+    allCategories.forEach((cat) => {
+      cat.classList.remove("active");
+    });
+    categoryButtons.forEach((btn) => {
+      btn.classList.remove("active");
+    });
+
+    // Show first category
+    if (categoryButtons.length > 0) {
+      const firstCategory = categoryButtons[0].getAttribute("data-category");
+      switchCategory(firstCategory);
+    }
+    return;
+  }
+
+  // Search mode: show all categories and filter items
+  let hasResults = false;
+  let categoryResultCounts = new Map();
+
+  // First pass: determine which items match and count per category
+  allItems.forEach((item) => {
+    const itemName = item.querySelector(".item-info h4")?.textContent.toLowerCase() || "";
+    const itemDesc = item.querySelector(".item-info p")?.textContent.toLowerCase() || "";
+    const categoryElement = item.closest(".menu-category");
+    const categoryName = categoryElement?.getAttribute("data-category") || "";
+
+    const matches =
+      itemName.includes(searchTerm) ||
+      itemDesc.includes(searchTerm) ||
+      categoryName.toLowerCase().includes(searchTerm);
+
+    if (matches) {
+      item.classList.remove("hidden");
+      item.classList.add("highlight");
+      hasResults = true;
+
+      // Count results per category
+      const currentCount = categoryResultCounts.get(categoryName) || 0;
+      categoryResultCounts.set(categoryName, currentCount + 1);
+
+      // Brief animation
+      setTimeout(() => {
+        item.classList.remove("highlight");
+      }, 600);
+    } else {
+      item.classList.add("hidden");
+    }
+  });
+
+  // Show all categories that have results, hide empty ones
+  allCategories.forEach((category) => {
+    const categoryName = category.getAttribute("data-category");
+    const hasVisibleItems = categoryResultCounts.has(categoryName);
+    
+    if (hasVisibleItems) {
+      category.classList.add("active");
+      category.style.display = "";
+    } else {
+      category.classList.remove("active");
+      category.style.display = "none";
+    }
+  });
+
+  // Deactivate all category buttons during search
+  categoryButtons.forEach((btn) => {
+    btn.classList.remove("active");
+  });
+
+  if (!hasResults) {
+    showInfoMessage("No items found matching your search");
+  }
+
+  // Apply layout to all visible categories
+  if (menuLayout === "carousel") {
+    allCategories.forEach((category) => {
+      if (categoryResultCounts.has(category.getAttribute("data-category"))) {
+        category.classList.add("horizontal");
+        category.style.display = "flex";
+      }
+    });
+  } else {
+    allCategories.forEach((category) => {
+      if (categoryResultCounts.has(category.getAttribute("data-category"))) {
+        category.classList.remove("horizontal");
+        category.style.display = "";
+      }
+    });
+  }
+
+  runAdjustHeightsDeferred();
+}
+
+// 4. MODIFIED: clearSearch()
+function clearSearch() {
+  const searchInput = document.getElementById("menuSearch");
+  const clearBtn = document.getElementById("clearSearch");
+
+  searchInput.value = "";
+  clearBtn.style.display = "none";
+  handleSearch({ target: { value: "" } });
+  searchInput.focus();
 }
 
 // ==========================================
