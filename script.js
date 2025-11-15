@@ -274,10 +274,12 @@ function setupLayoutButtons() {
       const searchInput = document.getElementById("menuSearch");
       const isSearchActive = searchInput && searchInput.value.trim() !== "";
       
-      applyMenuLayout(isSearchActive);
-
-      // Only reset scroll when switching TO carousel layout and NOT searching
-      if (!isSearchActive) {
+      if (isSearchActive) {
+        // Re-trigger search to apply new layout
+        handleSearch({ target: searchInput });
+      } else {
+        applyMenuLayout(false);
+        // Reset scroll when switching TO carousel layout and NOT searching
         const activePanel = getActivePanel();
         if (activePanel && menuLayout === "carousel") {
           activePanel.scrollTo({ left: 0, behavior: "smooth" });
@@ -1181,44 +1183,47 @@ function handleSearch(e) {
     }
   });
 
-  // Show all categories that have results, hide empty ones
-  allCategories.forEach((category) => {
-    const categoryName = category.getAttribute("data-category");
-    const hasVisibleItems = categoryResultCounts.has(categoryName);
-    
-    if (hasVisibleItems) {
-      category.classList.add("active");
-      category.style.display = "";
-    } else {
-      category.classList.remove("active");
-      category.style.display = "none";
-    }
-  });
-
   // Deactivate all category buttons during search
   categoryButtons.forEach((btn) => {
     btn.classList.remove("active");
   });
 
-  if (!hasResults) {
-    showInfoMessage("No items found matching your search");
-  }
-
-  // Apply layout to all visible categories
+  // Apply layout based on user selection
   if (menuLayout === "carousel") {
+    // Carousel layout for search results
     allCategories.forEach((category) => {
-      if (categoryResultCounts.has(category.getAttribute("data-category"))) {
-        category.classList.add("horizontal");
+      const categoryName = category.getAttribute("data-category");
+      const hasVisibleItems = categoryResultCounts.has(categoryName);
+      
+      if (hasVisibleItems) {
+        category.classList.add("active", "horizontal");
         category.style.display = "flex";
+      } else {
+        category.classList.remove("active", "horizontal");
+        category.style.display = "none";
       }
     });
   } else {
+    // Grid layout for search results
     allCategories.forEach((category) => {
-      if (categoryResultCounts.has(category.getAttribute("data-category"))) {
+      const categoryName = category.getAttribute("data-category");
+      const hasVisibleItems = categoryResultCounts.has(categoryName);
+      
+      if (hasVisibleItems) {
+        category.classList.add("active");
         category.classList.remove("horizontal");
-        category.style.display = "";
+        category.style.display = "grid";
+        category.style.gridTemplateColumns = "repeat(auto-fill, minmax(240px, 1fr))";
+        category.style.gap = "16px";
+      } else {
+        category.classList.remove("active");
+        category.style.display = "none";
       }
     });
+  }
+
+  if (!hasResults) {
+    showInfoMessage("No items found matching your search");
   }
 
   runAdjustHeightsDeferred();
