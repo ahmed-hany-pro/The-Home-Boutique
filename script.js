@@ -19,33 +19,10 @@ const EMAIL_CONFIG = {
 
 const GOOGLE_SHEETS_CONFIG = {
   webAppUrl:
-    "https://script.google.com/macros/s/AKfycbzbbe5iB4YX-j8pZS6WjPlYkrhZz5Np1kpTb87bAoKBEvOAGIbYfNhXzQRRoRlKHdLp/exec",
+    "https://script.google.com/macros/s/AKfycbz7rIr6Yq3oWzfRjWAW0mXaaaJKBwGAxPZ4NqoWbpQIHV2KZ0gD71bmjbNOciDrVKBY/exec",
   enableLogging: true,
 };
 
-const CATEGORY_IMAGES = {
-  Salad:
-    "https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200",
-  Soup: "https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=1200",
-  "Hot Drinks":
-    "https://images.unsplash.com/photo-1498804103079-a6351b050096?q=80&w=1200",
-  Dessert:
-    "https://images.unsplash.com/photo-1541782814452-d1df5a516422?q=80&w=1200",
-  "Oriental Dessert":
-    "https://images.unsplash.com/photo-1606850246023-7fc9ba50f2be?q=80&w=1200",
-  Pizza:
-    "https://images.unsplash.com/photo-1548365328-9f547fb09530?q=80&w=1200",
-  Sandwich:
-    "https://images.unsplash.com/photo-1550317138-10000687a72b?q=80&w=1200",
-  Beverages:
-    "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=1200",
-  "Main Course":
-    "https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200",
-  Pasta:
-    "https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=1200",
-  Appetizer:
-    "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200",
-};
 
 // ==========================================
 // GLOBAL STATE
@@ -127,6 +104,9 @@ function initializeMenu() {
   setupAddButtons();
   applyMenuLayout();
   runAdjustHeightsDeferred();
+  
+  // ADD THIS LINE:
+  applyMenuVisibilitySettings();
 }
 
 function enhanceMenuWithImages() {
@@ -217,7 +197,6 @@ function getImageUrl(item, itemName, category) {
   const inlineImg = item.querySelector("img[data-item-image], img.item-src");
   if (inlineImg?.src) return inlineImg.src;
 
-  if (CATEGORY_IMAGES[category]) return CATEGORY_IMAGES[category];
 
   return null;
 }
@@ -1130,35 +1109,36 @@ function handleSearch(e) {
   const categoryButtons = document.querySelectorAll(".category-btn");
   const categoryButtonsContainer = document.querySelector(".menu-categories");
 
-  // Show/hide clear button
   if (clearBtn) clearBtn.style.display = searchTerm ? "flex" : "none";
 
-  // If no search -> restore default view
   if (!searchTerm) {
-    // Remove any existing SearchResults panel
     const existingSearchPanel = document.querySelector('.menu-category[data-category="SearchResults"]');
     if (existingSearchPanel) existingSearchPanel.remove();
 
-    // Show all items in their original categories
     allItems.forEach(item => {
-      item.style.display = "";
+      // CHECK: Don't show admin-hidden items
+      if (!item.classList.contains('admin-hidden')) {
+        item.style.display = "";
+      }
     });
 
-    // Restore category buttons order
     restoreCategoryButtonsOrder();
-
-    // Restore original layout
     applyMenuLayout();
     runAdjustHeightsDeferred();
     return;
   }
 
-  // --- Real-time search within categories ---
   let hasResultsGlobal = false;
-  const categoryResults = new Map(); // Track which categories have results
-  const categoryMatchCounts = new Map(); // Track number of matches per category
+  const categoryResults = new Map();
+  const categoryMatchCounts = new Map();
 
   allItems.forEach((item) => {
+    // SKIP admin-hidden items
+    if (item.classList.contains('admin-hidden')) {
+      item.style.display = 'none';
+      return;
+    }
+    
     const itemName = item.querySelector(".item-info h4")?.textContent.toLowerCase() || "";
     const itemDesc = item.querySelector(".item-info p")?.textContent.toLowerCase() || "";
     const categoryElement = item.closest(".menu-category");
@@ -1173,7 +1153,6 @@ function handleSearch(e) {
       hasResultsGlobal = true;
       item.style.display = "";
       
-      // Track this category has results
       if (!categoryResults.has(categoryName)) {
         categoryResults.set(categoryName, true);
         categoryMatchCounts.set(categoryName, 0);
@@ -1184,7 +1163,6 @@ function handleSearch(e) {
     }
   });
 
-  // Show/hide categories based on whether they have matching items
   allCategories.forEach((category) => {
     const categoryName = category.getAttribute("data-category");
     const hasResults = categoryResults.has(categoryName);
@@ -1196,10 +1174,8 @@ function handleSearch(e) {
     }
   });
 
-  // Reorder category buttons - categories with results first
   const firstCategoryWithResults = reorderCategoryButtons(categoryResults, categoryMatchCounts);
 
-  // Update category buttons to show which have results
   categoryButtons.forEach((btn) => {
     const categoryName = btn.getAttribute("data-category");
     const hasResults = categoryResults.has(categoryName);
@@ -1213,17 +1189,13 @@ function handleSearch(e) {
     }
   });
 
-  // Switch to the first category with results
   if (firstCategoryWithResults) {
     switchCategory(firstCategoryWithResults);
   }
 
-  // Apply current layout
   applyMenuLayout();
 
-  // Show message if no results
   if (!hasResultsGlobal) {
-    // Create temporary message in active panel
     const activePanel = getActivePanel();
     if (activePanel) {
       const noResultsMsg = document.createElement("div");
@@ -1231,14 +1203,12 @@ function handleSearch(e) {
       noResultsMsg.style.cssText = "grid-column: 1/-1; text-align: center; padding: 40px; color: #6c757d; font-size: 1.1rem;";
       noResultsMsg.innerHTML = '<i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3; display: block;"></i>No items found matching your search';
       
-      // Remove any existing message
       const existing = activePanel.querySelector(".no-results-message");
       if (existing) existing.remove();
       
       activePanel.appendChild(noResultsMsg);
     }
   } else {
-    // Remove no results messages
     document.querySelectorAll(".no-results-message").forEach(msg => msg.remove());
   }
 
@@ -1320,40 +1290,35 @@ function clearSearch() {
   if (searchInput) searchInput.value = "";
   if (clearBtn) clearBtn.style.display = "none";
 
-  // Remove search results panel and reset items
   const searchPanel = document.querySelector('.menu-category[data-category="SearchResults"]');
   if (searchPanel) searchPanel.remove();
 
-  // Remove no results messages
   document.querySelectorAll(".no-results-message").forEach(msg => msg.remove());
 
-  // Show all items in their original categories
   document.querySelectorAll(".menu-item").forEach((item) => {
-    item.style.display = "";
+    // Don't show admin-hidden items
+    if (!item.classList.contains('admin-hidden')) {
+      item.style.display = "";
+    }
     item.classList.remove("hidden", "highlight");
   });
 
-  // Reset all categories display
   document.querySelectorAll(".menu-category").forEach((cat) => {
     cat.style.display = "";
     cat.classList.remove("horizontal");
   });
 
-  // Restore category buttons order
   restoreCategoryButtonsOrder();
 
-  // Restore first category as active (original behavior)
   const categoryButtons = document.querySelectorAll(".category-btn");
   if (categoryButtons.length > 0) {
     const firstCategory = categoryButtons[0].getAttribute("data-category");
     switchCategory(firstCategory);
   }
 
-  // Restore original layout
   applyMenuLayout();
   runAdjustHeightsDeferred();
   
-  // Keep focus in the search box for convenience
   if (searchInput) searchInput.focus();
 }
 
@@ -1434,9 +1399,74 @@ function attachMenuImageListeners() {
   });
 }
 
+
+function applyMenuVisibilitySettings() {
+  const menuVisibility = JSON.parse(localStorage.getItem('menuVisibility') || '{}');
+  
+  // Get all menu items
+  const menuItems = document.querySelectorAll('.menu-item');
+  
+  menuItems.forEach(item => {
+    // Get category and item name
+    const categoryWrapper = item.closest('.menu-category');
+    const category = categoryWrapper?.getAttribute('data-category') || '';
+    const nameElement = item.querySelector('.item-info h4');
+    const itemName = nameElement?.textContent.trim() || '';
+    
+    // Create the key
+    const key = `${category}-${itemName}`;
+    
+    // Check visibility setting
+    const isVisible = menuVisibility[key] !== false;
+    
+    // Hide or show the item
+    if (!isVisible) {
+      item.style.display = 'none';
+      item.classList.add('admin-hidden');
+    } else {
+      // Make sure it's visible (unless hidden by search)
+      if (!item.classList.contains('hidden')) {
+        item.style.display = '';
+      }
+      item.classList.remove('admin-hidden');
+    }
+  });
+  
+  // Hide empty categories
+  document.querySelectorAll('.menu-category').forEach(category => {
+    const visibleItems = Array.from(category.querySelectorAll('.menu-item'))
+      .filter(item => !item.classList.contains('admin-hidden') && item.style.display !== 'none');
+    
+    if (visibleItems.length === 0) {
+      category.classList.add('empty-category');
+    } else {
+      category.classList.remove('empty-category');
+    }
+  });
+  
+  // Update category buttons to show/hide empty categories
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    const categoryName = btn.getAttribute('data-category');
+    const categoryPanel = document.querySelector(`.menu-category[data-category="${categoryName}"]`);
+    
+    if (categoryPanel && categoryPanel.classList.contains('empty-category')) {
+      btn.style.opacity = '0.3';
+      btn.style.pointerEvents = 'none';
+    } else {
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+    }
+  });
+}
+
 // ==========================================
 // EVENT LISTENERS
 // ==========================================
+window.addEventListener('storage', (e) => {
+  if (e.key === 'menuVisibility') {
+    applyMenuVisibilitySettings();
+  }
+});
 
 window.addEventListener("resize", runAdjustHeightsDeferred);
 window.addEventListener("orientationchange", runAdjustHeightsDeferred);

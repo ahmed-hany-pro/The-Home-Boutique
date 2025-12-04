@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - The Home Boutique</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="logo-circle">
+                    <img src="logo.png" alt="Logo" class="logo-image">
+                </div>
+                <h1>Admin Panel</h1>
+                <p>The Home Boutique</p>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-left">
+                <div class="logo-circle">
+                    <img src="logo.png" alt="Logo" class="logo-image">
+                </div>
+                <div>
+                    <h1>Admin Panel</h1>
+                    <p>The Home Boutique</p>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="admin-nav">
+            <button class="nav-btn active" data-tab="menu">
+                <i class="fas fa-utensils"></i> Menu Management
+            </button>
+            <button class="nav-btn" data-tab="rooms">
+                <i class="fas fa-door-open"></i> Room Status
+            </button>
+            <button class="nav-btn" data-tab="bills">
+                <i class="fas fa-file-invoice-dollar"></i> Bills & Orders
+            </button>
+        </nav>
+
+        <!-- Tab Content -->
+        <main class="admin-content">
+            <!-- Menu Management Tab -->
+            <div id="menuTab" class="tab-content active">
+                <div class="section-header">
+                    <h2><i class="fas fa-utensils"></i> Menu Management</h2>
+                    <div class="header-actions">
+                        <button class="btn-secondary" onclick="toggleAllItems(true)">
+                            <i class="fas fa-eye"></i> Show All
+                        </button>
+                        <button class="btn-secondary" onclick="toggleAllItems(false)">
+                            <i class="fas fa-eye-slash"></i> Hide All
+                        </button>
+                    </div>
+                </div>
+
+                <div class="menu-categories-filter">
+                    <button class="filter-btn active" data-category="all">All Items</button>
+                    <button class="filter-btn" data-category="Appetizer">Appetizer</button>
+                    <button class="filter-btn" data-category="Soup">Soup</button>
+                    <button class="filter-btn" data-category="Salad">Salad</button>
+                    <button class="filter-btn" data-category="Main Course">Main Course</button>
+                    <button class="filter-btn" data-category="Pasta">Pasta</button>
+                    <button class="filter-btn" data-category="Pizza">Pizza</button>
+                    <button class="filter-btn" data-category="Sandwich">Sandwich</button>
+                    <button class="filter-btn" data-category="Oriental Dessert">Oriental Dessert</button>
+                    <button class="filter-btn" data-category="Dessert">Dessert</button>
+                    <button class="filter-btn" data-category="Hot Drinks">Hot Drinks</button>
+                    <button class="filter-btn" data-category="Beverages">Beverages</button>
+                </div>
+
+                <div id="menuItemsGrid" class="menu-items-grid">
+                    <!-- Menu items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Room Status Tab -->
+            <div id="roomsTab" class="tab-content">
+                <div class="section-header">
+                    <h2><i class="fas fa-door-open"></i> Room Status Management</h2>
+                    <div class="status-legend">
+                        <span class="legend-item"><span class="status-dot occupied"></span> Occupied</span>
+                        <span class="legend-item"><span class="status-dot vacant"></span> Vacant</span>
+                        <span class="legend-item"><span class="status-dot maybe"></span> Maybe</span>
+                    </div>
+                </div>
+
+                <div id="roomsGrid" class="rooms-grid">
+                    <!-- Rooms will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Bills & Orders Tab -->
+            <div id="billsTab" class="tab-content">
+                <div class="section-header">
+                    <h2><i class="fas fa-file-invoice-dollar"></i> Unpaid Bills & Orders</h2>
+                    <button class="btn-primary" onclick="refreshBills()">
+                        <i class="fas fa-sync-alt"></i> Refresh Data
+                    </button>
+                </div>
+
+                <div class="bills-summary">
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h3 id="totalUnpaidBills">0</h3>
+                            <p>Unpaid Bills</p>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h3 id="totalUnpaidAmount">0 L.E</h3>
+                            <p>Total Outstanding</p>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-door-open"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h3 id="roomsWithBills">0</h3>
+                            <p>Rooms with Bills</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="billsGrid" class="bills-grid">
+                    <!-- Bills will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Room Detail Modal -->
+    <div id="roomDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-door-open"></i> Room <span id="modalRoomNumber"></span> Details</h3>
+                <button class="close-btn" onclick="closeRoomModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="roomDetailContent">
+                    <!-- Room details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Bill Modal -->
+    <div id="editBillModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Edit Bill</h3>
+                <button class="close-btn" onclick="closeEditModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editBillForm" onsubmit="event.preventDefault(); saveEditedBill();">
+                    <input type="hidden" id="editRowIndex">
+                    
+                    <div class="form-group">
+                        <label for="editRoomNumber">Room Number</label>
+                        <input type="text" id="editRoomNumber" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editItems">Items</label>
+                        <textarea id="editItems" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editTotal">Total (L.E)</label>
+                        <input type="number" id="editTotal" step="0.01" required>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closeEditModal()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <div id="confirmIcon" class="confirm-modal-icon">
+                <i class="fas fa-question-circle"></i>
+            </div>
+            <div class="confirm-modal-body">
+                <h3 id="confirmTitle">Confirm Action</h3>
+                <p id="confirmMessage">Are you sure you want to proceed?</p>
+                <div class="confirm-modal-actions">
+                    <button class="confirm-btn confirm-btn-cancel" onclick="closeConfirmModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button id="confirmButton" class="confirm-btn confirm-btn-confirm">
+                        <i class="fas fa-check"></i> Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>
