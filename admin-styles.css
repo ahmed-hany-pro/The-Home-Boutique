@@ -266,7 +266,6 @@ body {
   gap: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
   position: sticky;
-  top: 99px;
   z-index: 99;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
