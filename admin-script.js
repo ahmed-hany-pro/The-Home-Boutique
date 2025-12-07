@@ -1,5 +1,5 @@
 // ==========================================
-// ADMIN PANEL - JAVASCRIPT
+// ADMIN PANEL - JAVASCRIPT (WITH GOOGLE SHEETS SYNC)
 // ==========================================
 
 // ==========================================
@@ -11,10 +11,10 @@ const ADMIN_CONFIG = {
   password: "admin", // Change this to a secure password
   googleSheetsId: "1ZceDX2yLtsQGIbQQf1EFduqxOzKpQW_BLtKmWRCE0Ck",
   googleSheetsUrl: "https://docs.google.com/spreadsheets/d/1ZceDX2yLtsQGIbQQf1EFduqxOzKpQW_BLtKmWRCE0Ck/gviz/tq?tqx=out:json",
-  appsScriptUrl: "https://script.google.com/macros/s/AKfycbz7rIr6Yq3oWzfRjWAW0mXaaaJKBwGAxPZ4NqoWbpQIHV2KZ0gD71bmjbNOciDrVKBY/exec" // Add your deployed Apps Script URL here
+  appsScriptUrl: "https://script.google.com/macros/s/AKfycbz71SMHIytZ8VvWDkHDT1JUYxTH_wx91TY8PsGp6k98fhLkMr-uITz6lANEcr95dtI0/exec"
 };
 
-// Menu items data (from index.html)
+// Menu items data
 const MENU_DATA = {
   "Appetizer": [
     { name: "Melanzana", price: 350, description: "Eggplant, Parmesan Cheese, minced meat and Mozzarella Cheese.", image: "images/Melanzana.jpg" },
@@ -147,6 +147,7 @@ let currentActiveCategory = 'all';
 let menuVisibility = {};
 let roomsData = {};
 let billsData = [];
+let isSyncing = false;
 
 // ==========================================
 // INITIALIZATION
@@ -154,8 +155,6 @@ let billsData = [];
 document.addEventListener('DOMContentLoaded', () => {
   checkLoginStatus();
   initializeLoginForm();
-  loadMenuVisibility();
-  loadRoomsData();
 });
 
 // ==========================================
@@ -188,10 +187,10 @@ function checkLoginStatus() {
   }
 }
 
-function showDashboard() {
+async function showDashboard() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('adminDashboard').style.display = 'block';
-  initializeAdminPanel();
+  await initializeAdminPanel();
 }
 
 function logout() {
@@ -202,11 +201,21 @@ function logout() {
 // ==========================================
 // ADMIN PANEL INITIALIZATION
 // ==========================================
-function initializeAdminPanel() {
+async function initializeAdminPanel() {
   initializeNavigation();
+  
+  // Load data from Google Sheets
+  showNotification('Loading data from server...', 'info', 2000);
+  await Promise.all([
+    loadMenuVisibility(),
+    loadRoomsData()
+  ]);
+  
   loadMenuManagement();
   loadRoomManagement();
   loadBillsManagement();
+  
+  showNotification('Data loaded successfully!', 'success', 2000);
 }
 
 function initializeNavigation() {
@@ -220,19 +229,16 @@ function initializeNavigation() {
 }
 
 function switchTab(tabName) {
-  // Update navigation buttons
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.classList.remove('active');
   });
   document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
 
-  // Update tab content
   document.querySelectorAll('.tab-content').forEach(tab => {
     tab.classList.remove('active');
   });
   document.getElementById(`${tabName}Tab`).classList.add('active');
   
-  // Refresh data when switching tabs
   if (tabName === 'rooms') {
     renderRooms();
   } else if (tabName === 'bills') {
@@ -243,24 +249,70 @@ function switchTab(tabName) {
 // ==========================================
 // MENU MANAGEMENT
 // ==========================================
-function loadMenuVisibility() {
-  const saved = localStorage.getItem('menuVisibility');
-  if (saved) {
-    menuVisibility = JSON.parse(saved);
-  } else {
-    // Initialize all items as visible
-    Object.keys(MENU_DATA).forEach(category => {
-      MENU_DATA[category].forEach(item => {
-        const key = `${category}-${item.name}`;
-        menuVisibility[key] = true;
+async function loadMenuVisibility() {
+  try {
+    // Try to load from Google Sheets first
+    const response = await fetch(`${ADMIN_CONFIG.appsScriptUrl}?action=getMenuVisibility`);
+    const data = await response.json();
+    
+    if (Object.keys(data).length > 0) {
+      menuVisibility = data;
+    } else {
+      // Initialize if empty
+      Object.keys(MENU_DATA).forEach(category => {
+        MENU_DATA[category].forEach(item => {
+          const key = `${category}-${item.name}`;
+          menuVisibility[key] = true;
+        });
       });
-    });
-    saveMenuVisibility();
+      await saveMenuVisibilityToServer();
+    }
+    
+    // Also save to localStorage as backup
+    localStorage.setItem('menuVisibility', JSON.stringify(menuVisibility));
+  } catch (error) {
+    console.error('Error loading menu visibility:', error);
+    // Fallback to localStorage
+    const saved = localStorage.getItem('menuVisibility');
+    if (saved) {
+      menuVisibility = JSON.parse(saved);
+    } else {
+      Object.keys(MENU_DATA).forEach(category => {
+        MENU_DATA[category].forEach(item => {
+          const key = `${category}-${item.name}`;
+          menuVisibility[key] = true;
+        });
+      });
+    }
   }
 }
 
-function saveMenuVisibility() {
-  localStorage.setItem('menuVisibility', JSON.stringify(menuVisibility));
+async function saveMenuVisibilityToServer() {
+  if (isSyncing) return;
+  
+  isSyncing = true;
+  try {
+    const response = await fetch(ADMIN_CONFIG.appsScriptUrl, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'saveMenuVisibility',
+        menuVisibility: menuVisibility
+      })
+    });
+    
+    const result = await response.text();
+    
+    if (result !== 'Success') {
+      console.error('Failed to save menu visibility:', result);
+    }
+    
+    // Also save to localStorage as backup
+    localStorage.setItem('menuVisibility', JSON.stringify(menuVisibility));
+  } catch (error) {
+    console.error('Error saving menu visibility:', error);
+  } finally {
+    isSyncing = false;
+  }
 }
 
 function loadMenuManagement() {
@@ -319,16 +371,16 @@ function renderMenuItems(category) {
   });
 }
 
-function toggleMenuItem(key) {
+async function toggleMenuItem(key) {
   menuVisibility[key] = !menuVisibility[key];
-  saveMenuVisibility(); // Auto-save
   renderMenuItems(currentActiveCategory);
+  showNotification('Saving to server...', 'info', 1000);
+  await saveMenuVisibilityToServer();
   showNotification('Menu item visibility updated', 'success', 2000);
 }
 
-function toggleAllItems(visible) {
+async function toggleAllItems(visible) {
   if (currentActiveCategory === 'all') {
-    // Toggle all items across all categories
     Object.keys(MENU_DATA).forEach(category => {
       MENU_DATA[category].forEach(item => {
         const key = `${category}-${item.name}`;
@@ -336,44 +388,83 @@ function toggleAllItems(visible) {
       });
     });
   } else {
-    // Toggle only items in the current category
     MENU_DATA[currentActiveCategory].forEach(item => {
       const key = `${currentActiveCategory}-${item.name}`;
       menuVisibility[key] = visible;
     });
   }
   
-  saveMenuVisibility(); // Auto-save
   renderMenuItems(currentActiveCategory);
+  showNotification('Saving to server...', 'info', 1000);
+  await saveMenuVisibilityToServer();
   
   const categoryText = currentActiveCategory === 'all' ? 'all items' : `all ${currentActiveCategory} items`;
   showNotification(`${categoryText} ${visible ? 'shown' : 'hidden'}`, 'success', 2000);
 }
 
-function saveMenuChanges() {
-  saveMenuVisibility();
-  showNotification('Menu changes saved successfully!', 'success', 2000);
-}
-
 // ==========================================
 // ROOM MANAGEMENT
 // ==========================================
-function loadRoomsData() {
-  const saved = localStorage.getItem('roomsData');
-  if (saved) {
-    roomsData = JSON.parse(saved);
-  } else {
-    // Initialize with specific room numbers
-    const roomNumbers = [401, 402, 403, 404, 405, 501, 502, 503, 504, 505, 506];
-    roomNumbers.forEach(num => {
-      roomsData[num] = 'vacant';
-    });
-    saveRoomsData();
+async function loadRoomsData() {
+  try {
+    // Try to load from Google Sheets first
+    const response = await fetch(`${ADMIN_CONFIG.appsScriptUrl}?action=getRoomStatus`);
+    const data = await response.json();
+    
+    if (Object.keys(data).length > 0) {
+      roomsData = data;
+    } else {
+      // Initialize with default rooms
+      const roomNumbers = [401, 402, 403, 404, 405, 501, 502, 503, 504, 505, 506];
+      roomNumbers.forEach(num => {
+        roomsData[num] = 'vacant';
+      });
+      await saveRoomsDataToServer();
+    }
+    
+    // Also save to localStorage as backup
+    localStorage.setItem('roomsData', JSON.stringify(roomsData));
+  } catch (error) {
+    console.error('Error loading rooms data:', error);
+    // Fallback to localStorage
+    const saved = localStorage.getItem('roomsData');
+    if (saved) {
+      roomsData = JSON.parse(saved);
+    } else {
+      const roomNumbers = [401, 402, 403, 404, 405, 501, 502, 503, 504, 505, 506];
+      roomNumbers.forEach(num => {
+        roomsData[num] = 'vacant';
+      });
+    }
   }
 }
 
-function saveRoomsData() {
-  localStorage.setItem('roomsData', JSON.stringify(roomsData));
+async function saveRoomsDataToServer() {
+  if (isSyncing) return;
+  
+  isSyncing = true;
+  try {
+    const response = await fetch(ADMIN_CONFIG.appsScriptUrl, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'saveRoomStatus',
+        roomsData: roomsData
+      })
+    });
+    
+    const result = await response.text();
+    
+    if (result !== 'Success') {
+      console.error('Failed to save room status:', result);
+    }
+    
+    // Also save to localStorage as backup
+    localStorage.setItem('roomsData', JSON.stringify(roomsData));
+  } catch (error) {
+    console.error('Error saving room status:', error);
+  } finally {
+    isSyncing = false;
+  }
 }
 
 function loadRoomManagement() {
@@ -392,12 +483,11 @@ function renderRooms() {
   const sortedRooms = Object.keys(roomsData).sort((a, b) => a - b);
 
   if (sortedRooms.length === 0) {
-    // Re-initialize if empty with specific room numbers
     const roomNumbers = [401, 402, 403, 404, 405, 501, 502, 503, 504, 505, 506];
     roomNumbers.forEach(num => {
       roomsData[num] = 'vacant';
     });
-    saveRoomsData();
+    saveRoomsDataToServer();
     renderRooms();
     return;
   }
@@ -425,10 +515,11 @@ function renderRooms() {
   });
 }
 
-function setRoomStatus(roomNumber, status) {
+async function setRoomStatus(roomNumber, status) {
   roomsData[roomNumber] = status;
-  saveRoomsData();
   renderRooms();
+  showNotification('Saving to server...', 'info', 1000);
+  await saveRoomsDataToServer();
   showNotification(`Room ${roomNumber} status updated to ${status}`, 'success');
 }
 
@@ -441,7 +532,6 @@ function showRoomDetails(roomNumber) {
   
   modal.style.display = 'block';
   
-  // Filter bills for this room
   const roomBills = billsData.filter(bill => bill.roomNumber === roomNumber);
   
   if (roomBills.length === 0) {
@@ -489,37 +579,32 @@ async function refreshBills() {
     const response = await fetch(ADMIN_CONFIG.googleSheetsUrl);
     const text = await response.text();
     
-    // Remove the callback wrapper from Google Sheets response
     const jsonString = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/)[1];
     const data = JSON.parse(jsonString);
     
-    // Parse the data
     const rows = data.table.rows;
     billsData = [];
     
-rows.forEach((row, index) => {
+    rows.forEach((row, index) => {
       try {
         const cells = row.c;
-        const status = cells[6]?.v || ''; // Column 7 (index 6) - Status
+        const status = cells[6]?.v || '';
         
-        // Only include unpaid bills
         if (status.toLowerCase() !== 'paid') {
-          // Parse the date properly
           let orderDate = cells[4]?.v || cells[4]?.f || '';
           
-          // If date is in format "Date(2025,10,16)", parse it
           if (typeof orderDate === 'string' && orderDate.includes('Date(')) {
             const dateMatch = orderDate.match(/Date\((\d+),(\d+),(\d+)\)/);
             if (dateMatch) {
               const year = dateMatch[1];
-              const month = String(parseInt(dateMatch[2]) + 1).padStart(2, '0'); // Month is 0-indexed
+              const month = String(parseInt(dateMatch[2]) + 1).padStart(2, '0');
               const day = String(dateMatch[3]).padStart(2, '0');
               orderDate = `${year}-${month}-${day}`;
             }
           }
           
           billsData.push({
-            rowIndex: index + 2, // +2 because: +1 for header row, +1 for 0-based to 1-based
+            rowIndex: index + 2,
             type: cells[0]?.v || '',
             roomNumber: cells[1]?.v || '',
             items: cells[2]?.v || '',
@@ -542,7 +627,6 @@ rows.forEach((row, index) => {
 }
 
 function renderBills() {
-  // Calculate summary
   const totalBills = billsData.length;
   const totalAmount = billsData.reduce((sum, bill) => sum + parseFloat(bill.total || 0), 0);
   const uniqueRooms = new Set(billsData.map(bill => bill.roomNumber)).size;
@@ -551,7 +635,6 @@ function renderBills() {
   document.getElementById('totalUnpaidAmount').textContent = totalAmount.toFixed(2) + ' L.E';
   document.getElementById('roomsWithBills').textContent = uniqueRooms;
   
-  // Group bills by room
   const billsByRoom = {};
   billsData.forEach(bill => {
     if (!billsByRoom[bill.roomNumber]) {
@@ -560,7 +643,6 @@ function renderBills() {
     billsByRoom[bill.roomNumber].push(bill);
   });
   
-  // Render bills
   const grid = document.getElementById('billsGrid');
   grid.innerHTML = '';
   
@@ -688,13 +770,11 @@ function editBill(rowIndex) {
     return;
   }
   
-  // Populate edit modal
   document.getElementById('editRowIndex').value = rowIndex;
   document.getElementById('editRoomNumber').value = bill.roomNumber;
   document.getElementById('editItems').value = bill.items;
   document.getElementById('editTotal').value = bill.total.replace('L.E', '').trim();
   
-  // Show modal
   document.getElementById('editBillModal').style.display = 'block';
 }
 
@@ -786,11 +866,9 @@ function showConfirmModal(title, message, type = 'warning', onConfirm) {
   const iconContainer = document.getElementById('confirmIcon');
   const confirmButton = document.getElementById('confirmButton');
   
-  // Set title and message
   document.getElementById('confirmTitle').textContent = title;
   document.getElementById('confirmMessage').textContent = message;
   
-  // Set icon and style based on type
   iconContainer.className = `confirm-modal-icon ${type}`;
   
   if (type === 'danger') {
@@ -803,13 +881,11 @@ function showConfirmModal(title, message, type = 'warning', onConfirm) {
     confirmButton.innerHTML = '<i class="fas fa-check"></i> Confirm';
   }
   
-  // Set up confirm button handler
   confirmButton.onclick = () => {
     closeConfirmModal();
     if (onConfirm) onConfirm();
   };
   
-  // Show modal
   modal.style.display = 'block';
 }
 
@@ -837,7 +913,6 @@ window.onclick = function(event) {
 // Make functions globally accessible
 window.toggleMenuItem = toggleMenuItem;
 window.toggleAllItems = toggleAllItems;
-window.saveMenuChanges = saveMenuChanges;
 window.setRoomStatus = setRoomStatus;
 window.showRoomDetails = showRoomDetails;
 window.closeRoomModal = closeRoomModal;

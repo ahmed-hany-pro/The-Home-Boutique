@@ -19,7 +19,7 @@ const EMAIL_CONFIG = {
 
 const GOOGLE_SHEETS_CONFIG = {
   webAppUrl:
-    "https://script.google.com/macros/s/AKfycbz7rIr6Yq3oWzfRjWAW0mXaaaJKBwGAxPZ4NqoWbpQIHV2KZ0gD71bmjbNOciDrVKBY/exec",
+    "https://script.google.com/macros/s/AKfycbz71SMHIytZ8VvWDkHDT1JUYxTH_wx91TY8PsGp6k98fhLkMr-uITz6lANEcr95dtI0/exec",
   enableLogging: true,
 };
 
