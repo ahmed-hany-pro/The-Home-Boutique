@@ -11,7 +11,7 @@ const ADMIN_CONFIG = {
   password: "admin", // Change this to a secure password
   googleSheetsId: "1ZceDX2yLtsQGIbQQf1EFduqxOzKpQW_BLtKmWRCE0Ck",
   googleSheetsUrl: "https://docs.google.com/spreadsheets/d/1ZceDX2yLtsQGIbQQf1EFduqxOzKpQW_BLtKmWRCE0Ck/gviz/tq?tqx=out:json",
-  appsScriptUrl: "https://script.google.com/macros/s/AKfycbz71SMHIytZ8VvWDkHDT1JUYxTH_wx91TY8PsGp6k98fhLkMr-uITz6lANEcr95dtI0/exec"
+  appsScriptUrl: "https://script.google.com/macros/s/AKfycbyuHoNPbMB9lrBH7iddL0nIcgBy_sYSzUUySBIK8WLOCG0uHy4h02RoSWSnO3FIC6qy/exec"
 };
 
 // Menu items data
@@ -143,11 +143,14 @@ const MENU_DATA = {
 // ==========================================
 // GLOBAL STATE
 // ==========================================
+
 let currentActiveCategory = 'all';
 let menuVisibility = {};
 let roomsData = {};
 let billsData = [];
 let isSyncing = false;
+let autoSyncInterval = null;
+let currentTab = 'rooms';
 
 // ==========================================
 // INITIALIZATION
@@ -191,9 +194,11 @@ async function showDashboard() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('adminDashboard').style.display = 'block';
   await initializeAdminPanel();
+  startAutoSync();
 }
 
 function logout() {
+  stopAutoSync();
   localStorage.removeItem('adminLoggedIn');
   location.reload();
 }
@@ -229,6 +234,8 @@ function initializeNavigation() {
 }
 
 function switchTab(tabName) {
+  currentTab = tabName;
+  
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.classList.remove('active');
   });
@@ -243,6 +250,151 @@ function switchTab(tabName) {
     renderRooms();
   } else if (tabName === 'bills') {
     renderBills();
+  }
+}
+
+// ==========================================
+// AUTO SYNC SYSTEM
+// ==========================================
+function startAutoSync() {
+  // Clear any existing interval
+  stopAutoSync();
+  
+  // Sync every 10 seconds
+  autoSyncInterval = setInterval(async () => {
+    try {
+      await syncAllData();
+    } catch (error) {
+      console.error('Auto-sync error:', error);
+    }
+  }, 30000);
+  
+  console.log('Auto-sync started (every 30 seconds)');
+}
+
+function stopAutoSync() {
+  if (autoSyncInterval) {
+    clearInterval(autoSyncInterval);
+    autoSyncInterval = null;
+    console.log('Auto-sync stopped');
+  }
+}
+
+async function syncAllData() {
+  if (isSyncing) return;
+  
+  isSyncing = true;
+  try {
+    // Sync all data silently
+    await Promise.all([
+      syncMenuVisibility(),
+      syncRoomsData(),
+      syncBillsData()
+    ]);
+  } finally {
+    isSyncing = false;
+  }
+}
+
+async function syncMenuVisibility() {
+  try {
+    const response = await fetch(`${ADMIN_CONFIG.appsScriptUrl}?action=getMenuVisibility`);
+    const data = await response.json();
+    
+    if (Object.keys(data).length > 0) {
+      const hasChanges = JSON.stringify(menuVisibility) !== JSON.stringify(data);
+      if (hasChanges) {
+        menuVisibility = data;
+        localStorage.setItem('menuVisibility', JSON.stringify(menuVisibility));
+        
+        // Re-render if on menu tab
+        if (currentTab === 'menu') {
+          renderMenuItems(currentActiveCategory);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error syncing menu visibility:', error);
+  }
+}
+
+async function syncRoomsData() {
+  try {
+    const response = await fetch(`${ADMIN_CONFIG.appsScriptUrl}?action=getRoomStatus`);
+    const data = await response.json();
+    
+    if (Object.keys(data).length > 0) {
+      const hasChanges = JSON.stringify(roomsData) !== JSON.stringify(data);
+      if (hasChanges) {
+        roomsData = data;
+        localStorage.setItem('roomsData', JSON.stringify(roomsData));
+        
+        // Re-render if on rooms tab
+        if (currentTab === 'rooms') {
+          renderRooms();
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error syncing rooms data:', error);
+  }
+}
+
+async function syncBillsData() {
+  try {
+    const response = await fetch(ADMIN_CONFIG.googleSheetsUrl);
+    const text = await response.text();
+    
+    const jsonString = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/)[1];
+    const data = JSON.parse(jsonString);
+    
+    const rows = data.table.rows;
+    const newBillsData = [];
+    
+    rows.forEach((row, index) => {
+      try {
+        const cells = row.c;
+        const status = cells[6]?.v || '';
+        
+        if (status.toLowerCase() !== 'paid') {
+          let orderDate = cells[4]?.v || cells[4]?.f || '';
+          
+          if (typeof orderDate === 'string' && orderDate.includes('Date(')) {
+            const dateMatch = orderDate.match(/Date\((\d+),(\d+),(\d+)\)/);
+            if (dateMatch) {
+              const year = dateMatch[1];
+              const month = String(parseInt(dateMatch[2]) + 1).padStart(2, '0');
+              const day = String(dateMatch[3]).padStart(2, '0');
+              orderDate = `${year}-${month}-${day}`;
+            }
+          }
+          
+          newBillsData.push({
+            rowIndex: index + 2,
+            type: cells[0]?.v || '',
+            roomNumber: cells[1]?.v || '',
+            items: cells[2]?.v || '',
+            total: cells[3]?.v || '0',
+            orderDate: orderDate,
+            status: status
+          });
+        }
+      } catch (e) {
+        console.error('Error parsing row:', e);
+      }
+    });
+    
+    const hasChanges = JSON.stringify(billsData) !== JSON.stringify(newBillsData);
+    if (hasChanges) {
+      billsData = newBillsData;
+      
+      // Re-render if on bills tab
+      if (currentTab === 'bills') {
+        renderBills();
+      }
+    }
+  } catch (error) {
+    console.error('Error syncing bills data:', error);
   }
 }
 

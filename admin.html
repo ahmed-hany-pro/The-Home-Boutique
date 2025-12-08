@@ -40,6 +40,7 @@
     <!-- Admin Dashboard -->
     <div id="adminDashboard" class="admin-dashboard" style="display: none;">
         <!-- Header -->
+       <!-- Header -->
         <header class="admin-header">
             <div class="header-left">
                 <div class="logo-circle">
@@ -50,9 +51,15 @@
                     <p>The Home Boutique</p>
                 </div>
             </div>
-            <button class="logout-btn" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <div class="sync-indicator">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Auto-sync active</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
         </header>
 
         <!-- Navigation Tabs -->
