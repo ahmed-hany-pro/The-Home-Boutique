@@ -291,8 +291,6 @@ body {
   display: flex;
   gap: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-  position: sticky;
-  z-index: 99;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
